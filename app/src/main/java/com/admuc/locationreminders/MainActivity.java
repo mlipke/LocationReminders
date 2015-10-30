@@ -5,11 +5,17 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.admuc.locationreminders.database.RemindersContract;
+import com.admuc.locationreminders.database.RemindersDbHelper;
+import com.admuc.locationreminders.models.AutomaticReminder;
+
 public class MainActivity extends AppCompatActivity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +33,13 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        AutomaticReminder ar = new AutomaticReminder("Buy milk", "comment here", "shop");
+        ar.save();
+
+
+        Log.d("Reminder:", AutomaticReminder.findById(AutomaticReminder.class, 1L).getTitle());
+
     }
 
     @Override
