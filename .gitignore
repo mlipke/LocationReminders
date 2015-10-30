@@ -1,9 +1,12 @@
-# IDE
+# Mac OS
+.DS_Store
+
+# Android Studio
 /.idea/workspace.xml
 /.idea/libraries
-.DS_Store
 /captures
 /.idea/
+*.iml
 
 # Built application files
 *.apk

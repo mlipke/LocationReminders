@@ -10,8 +10,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.admuc.locationreminders.database.RemindersContract;
-import com.admuc.locationreminders.database.RemindersDbHelper;
 import com.admuc.locationreminders.models.AutomaticReminder;
 
 public class MainActivity extends AppCompatActivity {
