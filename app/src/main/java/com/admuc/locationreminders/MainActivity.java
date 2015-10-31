@@ -18,10 +18,10 @@ import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.Reminder;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
         AutomaticReminder ar = new AutomaticReminder("Buy milk", "comment here", "shop");
         ar.save();
+        AutomaticReminder ar2 = new AutomaticReminder("Buy cookies", "add notes", "shop");
+        ar2.save();
 
-        Log.d("Reminder:", AutomaticReminder.findById(AutomaticReminder.class, 1L).getTitle());
-
-        final List<Reminder> reminders = new ArrayList<>();
-        reminders.add(ar);
+        final List<Reminder> reminders = getAllReminders();
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         final ReminderAdapter adapter = new ReminderAdapter(reminders);
@@ -53,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Reminder reminder = new AutomaticReminder("Do something", "comment here", "shop");
+                AutomaticReminder reminder = new AutomaticReminder("Do something", "comment here", "shop");
+                reminder.save();
                 reminders.add(reminder);
                 adapter.notifyDataSetChanged();
             }
@@ -80,5 +80,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private List<Reminder> getAllReminders() {
+        List<Reminder> reminders = new ArrayList<>();
+
+        Iterator<AutomaticReminder> remindersDb = AutomaticReminder.findAll(AutomaticReminder.class);
+        while (remindersDb.hasNext()) {
+            reminders.add(remindersDb.next());
+        }
+
+        return reminders;
     }
 }
