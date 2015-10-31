@@ -2,15 +2,21 @@ package com.admuc.locationreminders;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.admuc.locationreminders.adapters.ReminderAdapter;
 import com.admuc.locationreminders.models.AutomaticReminder;
+import com.admuc.locationreminders.models.Reminder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,23 +27,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setTitle(R.string.all_reminders);
+
+        AutomaticReminder ar = new AutomaticReminder("Buy milk", "comment here", "shop");
+        ar.save();
+
+        Log.d("Reminder:", AutomaticReminder.findById(AutomaticReminder.class, 1L).getTitle());
+
+        final List<Reminder> reminders = new ArrayList<>();
+        reminders.add(ar);
+
+        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        final ReminderAdapter adapter = new ReminderAdapter(reminders);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setHasFixedSize(true);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Reminder reminder = new AutomaticReminder("Do something", "comment here", "shop");
+                reminders.add(reminder);
+                adapter.notifyDataSetChanged();
             }
         });
-
-        AutomaticReminder ar = new AutomaticReminder("Buy milk", "comment here", "shop");
-        ar.save();
-
-
-        Log.d("Reminder:", AutomaticReminder.findById(AutomaticReminder.class, 1L).getTitle());
-
     }
 
     @Override

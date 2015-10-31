@@ -5,4 +5,8 @@ package com.admuc.locationreminders.models;
  */
 public interface Reminder {
 
+    String getTitle();
+    String getNote();
+    long getTimestamp();
+
 }

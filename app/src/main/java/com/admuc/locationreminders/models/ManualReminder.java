@@ -25,6 +25,7 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
 
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
@@ -33,6 +34,7 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
         this.title = title;
     }
 
+    @Override
     public String getNote() {
         return note;
     }
@@ -49,6 +51,7 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
         this.location = location;
     }
 
+    @Override
     public long getTimestamp() {
         return timestamp;
     }

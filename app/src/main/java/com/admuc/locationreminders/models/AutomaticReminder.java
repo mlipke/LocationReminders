@@ -31,6 +31,7 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
         this.poi = poi;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
@@ -39,6 +40,7 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
         this.title = title;
     }
 
+    @Override
     public String getNote() {
         return note;
     }
@@ -47,6 +49,7 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
         this.note = note;
     }
 
+    @Override
     public long getTimestamp() {
         return timestamp;
     }
