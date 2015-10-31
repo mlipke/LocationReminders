@@ -3,4 +3,7 @@
     <string name="action_settings">Settings</string>
 
     <string name="all_reminders">All Reminders</string>
+
+    <string name="open_drawer">Drawer open</string>
+    <string name="closed_drawer">Drawer closed</string>
 </resources>
