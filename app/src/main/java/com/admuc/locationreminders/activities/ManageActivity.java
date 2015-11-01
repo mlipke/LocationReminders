@@ -1,4 +1,4 @@
-package com.admuc.locationreminders;
+package com.admuc.locationreminders.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;

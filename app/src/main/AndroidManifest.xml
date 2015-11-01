@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ManageActivity"
+            android:name=".activities.ManageActivity"
             android:label="@string/title_activity_manage"
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
