@@ -6,4 +6,5 @@
 
     <string name="open_drawer">Drawer open</string>
     <string name="closed_drawer">Drawer closed</string>
+    <string name="title_activity_manage">ManageActivity</string>
 </resources>
