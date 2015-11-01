@@ -1,7 +1,9 @@
 package com.admuc.locationreminders.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.adapters.ReminderAdapter;
@@ -23,6 +27,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,10 +36,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.closed_drawer);
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new DrawerClickListener());
 
         AutomaticReminder ar = new AutomaticReminder("Buy milk", "comment here", "shop");
         ar.save();
@@ -41,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
         ar2.save();
 
         final List<Reminder> reminders = getAllReminders();
-
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         final ReminderAdapter adapter = new ReminderAdapter(reminders);
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -80,6 +89,26 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class DrawerClickListener implements NavigationView.OnNavigationItemSelectedListener {
+
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            drawerLayout.closeDrawers();
+
+            switch (item.getItemId()) {
+                case R.id.nav_settings:
+                    Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                    startActivity(intent);
+                    break;
+                default:
+                    return false;
+            }
+
+            return false;
+        }
+
     }
 
     private List<Reminder> getAllReminders() {
