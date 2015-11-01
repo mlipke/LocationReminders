@@ -1,5 +1,6 @@
 package com.admuc.locationreminders.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.DrawerLayout;
@@ -48,14 +49,18 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
 
+        final Intent intent = new Intent(this, ManageActivity.class);
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AutomaticReminder reminder = new AutomaticReminder("Do something", "comment here", "shop");
+                startActivity(intent);
+
+                /*AutomaticReminder reminder = new AutomaticReminder("Do something", "comment here", "shop");
                 reminder.save();
                 reminders.add(reminder);
-                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();*/
             }
         });
     }
