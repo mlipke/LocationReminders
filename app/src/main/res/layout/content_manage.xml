@@ -63,16 +63,22 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView2"
+        android:id="@+id/locationRadioGroup"
+        android:orientation="vertical">
     <RadioButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="automatic"
         android:id="@+id/radioButton"
-        android:layout_below="@+id/textView2"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:checked="true"
-        android:enabled="true" />
+        android:enabled="true"
+        android:onClick="changeLocationDetection" />
 
     <RadioButton
         android:layout_width="wrap_content"
@@ -83,7 +89,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:checked="false"
-        android:enabled="true" />
+        android:enabled="true"
+        android:onClick="changeLocationDetection" />
+    </RadioGroup>
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
@@ -91,8 +99,8 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Select type of POI"
-        android:id="@+id/textView3"
-        android:layout_below="@+id/radioButton2"
+        android:id="@+id/poiLabel"
+        android:layout_below="@+id/locationRadioGroup"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
@@ -100,7 +108,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/poi_dropdown"
-        android:layout_below="@+id/textView3"
+        android:layout_below="@+id/poiLabel"
         android:layout_alignParentStart="true"
-        android:spinnerMode="dropdown" />
+        android:spinnerMode="dropdown"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set location"
+        android:id="@+id/setLocation"
+        android:layout_below="@+id/poiLabel"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="invisible" />
 </RelativeLayout>
