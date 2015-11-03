@@ -10,24 +10,36 @@
     tools:showIn="@layout/activity_manage"
     tools:context="com.admuc.locationreminders.activities.ManageActivity">
 
-    <EditText
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/titleLayout"
         android:layout_height="wrap_content"
-        android:id="@+id/title"
-        android:singleLine="true"
-        android:hint="Title"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_width="match_parent"
+        android:layout_below="@+id/textView">
 
-    <EditText
-        android:layout_width="wrap_content"
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            android:singleLine="true"
+            android:hint="Title" />
+
+    </android.support.design.widget.TextInputLayout>
+
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/noteLayout"
         android:layout_height="wrap_content"
-        android:id="@+id/note"
-        android:layout_below="@+id/title"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:hint="Note (optional)" />
+        android:layout_width="match_parent"
+        android:layout_below="@+id/titleLayout">
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/note"
+            android:hint="Note (optional)" />
+
+    </android.support.design.widget.TextInputLayout>
+
 
     <TextView
         android:layout_width="wrap_content"
@@ -47,7 +59,7 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Location detection"
         android:id="@+id/textView2"
-        android:layout_below="@+id/note"
+        android:layout_below="@+id/noteLayout"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true" />
 
