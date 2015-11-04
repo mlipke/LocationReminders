@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.adapters.ReminderAdapter;
 import com.admuc.locationreminders.models.AutomaticReminder;
+import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
 
 import java.util.ArrayList;
@@ -23,6 +25,8 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+
+    private ReminderAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         final List<Reminder> reminders = getAllReminders();
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        final ReminderAdapter adapter = new ReminderAdapter(reminders);
+        adapter = new ReminderAdapter(reminders);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
@@ -63,6 +67,15 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();*/
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        List<Reminder> reminders = getAllReminders();
+        adapter.setReminders(reminders);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -90,9 +103,15 @@ public class MainActivity extends AppCompatActivity {
     private List<Reminder> getAllReminders() {
         List<Reminder> reminders = new ArrayList<>();
 
-        Iterator<AutomaticReminder> remindersDb = AutomaticReminder.findAll(AutomaticReminder.class);
-        while (remindersDb.hasNext()) {
-            reminders.add(remindersDb.next());
+        Iterator<AutomaticReminder> automaticRemindersIterator = AutomaticReminder.findAll(AutomaticReminder.class);
+        while (automaticRemindersIterator.hasNext()) {
+            reminders.add(automaticRemindersIterator.next());
+        }
+
+        Iterator<ManualReminder> manualReminderIterator = ManualReminder.findAll(ManualReminder.class);
+        while (manualReminderIterator.hasNext()) {
+            Log.d("Reminder", "item");
+            reminders.add(manualReminderIterator.next());
         }
 
         return reminders;

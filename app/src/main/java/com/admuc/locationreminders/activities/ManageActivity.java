@@ -80,12 +80,7 @@ public class ManageActivity extends AppCompatActivity {
                         reminder.save();
                     }
 
-
-                    // TODO: notify main activity about changes in the reminder list
-                    // TODO: -> send intent to mainActivity with message about changes
-                    /*reminders.add(reminder);
-                    adapter.notifyDataSetChanged();*/
-                    
+                    finish();
                 }
             }
         });

@@ -61,4 +61,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     public int getItemCount() {
         return reminders.size();
     }
+
+    public void setReminders(List<Reminder> reminders) {
+        this.reminders = reminders;
+    }
 }
