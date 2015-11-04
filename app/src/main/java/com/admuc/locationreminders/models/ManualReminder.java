@@ -2,8 +2,6 @@ package com.admuc.locationreminders.models;
 
 import com.orm.SugarRecord;
 
-import java.sql.Timestamp;
-
 /**
  * Created by 4gray on 30.10.15.
  */
@@ -15,6 +13,8 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
     private long timestamp;
 
     private Location location;
+
+    public ManualReminder() {}
 
     public ManualReminder(String title, String note, Location location) {
         this.title = title;

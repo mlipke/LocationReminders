@@ -1,9 +1,11 @@
 package com.admuc.locationreminders.models;
 
+import com.orm.SugarRecord;
+
 /**
  * Created by 4gray on 30.10.15.
  */
-public class Location {
+public class Location extends SugarRecord<Location> {
 
     private double lon;
     private double lat;

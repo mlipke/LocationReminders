@@ -62,7 +62,7 @@ public class ManageActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("Title:", title.getText().toString());
                 if (title.getText().toString().equals("")) {
-                    Snackbar.make(view, "Pleas add title", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(view, "Please add title", Snackbar.LENGTH_SHORT).show();
                 }
                 else {
                     locationRadioValue = ((RadioButton) findViewById(locationRadioGroup.getCheckedRadioButtonId())).getText().toString();
@@ -85,13 +85,14 @@ public class ManageActivity extends AppCompatActivity {
                     // TODO: -> send intent to mainActivity with message about changes
                     /*reminders.add(reminder);
                     adapter.notifyDataSetChanged();*/
+                    
                 }
             }
         });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-    
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
