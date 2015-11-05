@@ -1,6 +1,7 @@
 package com.admuc.locationreminders.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +24,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         this.reminders = reminders;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView title;
         public TextView locationString;
@@ -31,21 +32,39 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         public ImageView type;
         public ImageView locationIcon;
         public ImageView edit;
+        public ImyViewHolderClicks clickListener;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, ImyViewHolderClicks clickListener) {
             super(itemView);
+            this.clickListener = clickListener;
             this.title = (TextView) itemView.findViewById(R.id.title);
             this.locationString = (TextView) itemView.findViewById(R.id.locationString);
             this.type = (ImageView) itemView.findViewById(R.id.type);
             this.locationIcon = (ImageView) itemView.findViewById(R.id.locationIcon);
             this.edit = (ImageView) itemView.findViewById(R.id.edit);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            clickListener.onReminder(this.title.getText().toString());
+        }
+
+        public interface ImyViewHolderClicks {
+            void onReminder(String title);
         }
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_list_item_view, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        ViewHolder viewHolder = new ViewHolder(view, new ViewHolder.ImyViewHolderClicks() {
+            @Override
+            public void onReminder(String title) {
+                Log.d("Clicked item: ", title);
+                // TODO: create DetailedView activity and send id or reminder object
+            }
+        });
 
         return viewHolder;
     }
