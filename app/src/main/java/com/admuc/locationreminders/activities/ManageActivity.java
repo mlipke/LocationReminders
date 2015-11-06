@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -38,15 +39,13 @@ public class ManageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        arraySpinner = getResources().getStringArray(R.array.poiArray);
 
-        // dummy spinner items for poi list
-        this.arraySpinner = new String[] {
-                "bank", "bar", "shop"
-        };
-        final Spinner spinner = (Spinner) findViewById(R.id.poi_dropdown);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, arraySpinner);
-        spinner.setAdapter(adapter);
+        ArrayAdapter<String> poiAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, arraySpinner);
+        final AutoCompleteTextView poiTextView = (AutoCompleteTextView)
+                findViewById(R.id.poiTextView);
+        poiTextView.setAdapter(poiAdapter);
 
         // get fields and values
         final EditText title = (EditText) findViewById(R.id.title);
@@ -68,7 +67,7 @@ public class ManageActivity extends AppCompatActivity {
                     locationRadioValue = ((RadioButton) findViewById(locationRadioGroup.getCheckedRadioButtonId())).getText().toString();
                     Log.d("ReminderType:", locationRadioValue);
 
-                    String selectedPoi = spinner.getSelectedItem().toString();
+                    String selectedPoi = poiTextView.getText().toString();
                     Log.d("Selected POI: ", selectedPoi);
 
                     if (locationRadioValue.equals("automatic")) {
@@ -106,19 +105,19 @@ public class ManageActivity extends AppCompatActivity {
         locationRadioValue = ((RadioButton)findViewById(locationRadioGroup.getCheckedRadioButtonId())).getText().toString();
 
         Button setLocation = (Button) findViewById(R.id.setLocation);
-        Spinner spinner = (Spinner) findViewById(R.id.poi_dropdown);
+        AutoCompleteTextView poiTextView = (AutoCompleteTextView) findViewById(R.id.poiTextView);
         TextView poiLabel = (TextView) findViewById(R.id.poiLabel);
 
         if(locationRadioValue.equals("manual")) {
             //hide location radio group and shop button for manual position selection
             setLocation.setVisibility(View.VISIBLE);
-            spinner.setVisibility(View.INVISIBLE);
+            poiTextView.setVisibility(View.INVISIBLE);
             poiLabel.setText("Set position");
         }
         else {
             // toggle back
             setLocation.setVisibility(View.INVISIBLE);
-            spinner.setVisibility(View.VISIBLE);
+            poiTextView.setVisibility(View.VISIBLE);
             poiLabel.setText("Select type of POI");
         }
     }
