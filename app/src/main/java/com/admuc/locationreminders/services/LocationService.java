@@ -22,7 +22,7 @@ public class LocationService extends Service {
     public IBinder onBind(Intent intent) {
         return messenger.getBinder();
     }
-    
+
     static class MessageHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
