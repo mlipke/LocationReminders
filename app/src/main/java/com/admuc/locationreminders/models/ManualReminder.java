@@ -26,6 +26,12 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
     }
 
     @Override
+    public void save() {
+        location.save();
+        super.save();
+    }
+
+    @Override
     public String getTitle() {
         return title;
     }
