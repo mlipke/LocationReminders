@@ -76,7 +76,6 @@ public class ManageActivity extends AppCompatActivity {
                     } else {
                         Location location = new Location(1.2, 23.6);
                         location.setDescription("New Location");
-                        location.save();
                         ManualReminder reminder = new ManualReminder(title.getText().toString(), note.getText().toString(), location);
                         reminder.save();
                     }
