@@ -56,4 +56,8 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
         return timestamp;
     }
 
+    @Override
+    public String getLocationDescription() {
+        return location.toString();
+    }
 }

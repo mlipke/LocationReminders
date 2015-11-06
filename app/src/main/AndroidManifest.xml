@@ -14,7 +14,7 @@
             android:value="reminders.db" />
         <meta-data
             android:name="VERSION"
-            android:value="3" />
+            android:value="5" />
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />

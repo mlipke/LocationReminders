@@ -72,6 +72,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         Reminder reminder = reminders.get(position);
 
         holder.title.setText(reminder.getTitle());
+        holder.locationString.setText(reminder.getLocationDescription());
     }
 
     @Override

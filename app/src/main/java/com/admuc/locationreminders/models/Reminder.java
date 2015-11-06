@@ -7,6 +7,9 @@ public interface Reminder {
 
     String getTitle();
     String getNote();
+
+    String getLocationDescription();
+
     long getTimestamp();
 
 }

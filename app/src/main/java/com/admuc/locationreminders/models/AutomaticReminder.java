@@ -53,4 +53,9 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
     public long getTimestamp() {
         return timestamp;
     }
+
+    @Override
+    public String getLocationDescription() {
+        return poi;
+    }
 }
