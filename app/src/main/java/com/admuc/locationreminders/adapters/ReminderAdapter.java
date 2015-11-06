@@ -31,7 +31,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
         public ImageView type;
         public ImageView locationIcon;
-        public ImageView edit;
         public ImyViewHolderClicks clickListener;
 
         public ViewHolder(View itemView, ImyViewHolderClicks clickListener) {
@@ -41,7 +40,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
             this.locationString = (TextView) itemView.findViewById(R.id.locationString);
             this.type = (ImageView) itemView.findViewById(R.id.type);
             this.locationIcon = (ImageView) itemView.findViewById(R.id.locationIcon);
-            this.edit = (ImageView) itemView.findViewById(R.id.edit);
             itemView.setOnClickListener(this);
         }
 
