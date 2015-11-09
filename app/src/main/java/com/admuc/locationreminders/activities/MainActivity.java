@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         final List<Reminder> reminders = getAllReminders();
 
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        adapter = new ReminderAdapter(reminders);
+        adapter = new ReminderAdapter(reminders, this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
