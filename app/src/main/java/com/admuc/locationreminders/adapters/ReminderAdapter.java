@@ -34,6 +34,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public long id;
+        public String typeName;
 
         public TextView title;
         public TextView locationString;
@@ -54,11 +55,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
         @Override
         public void onClick(View v) {
-            clickListener.onReminder(this.id);
+            clickListener.onReminder(this.id, this.typeName);
         }
 
         public interface ImyViewHolderClicks {
-            void onReminder(long id);
+            void onReminder(long id, String type);
         }
     }
 
@@ -67,9 +68,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_list_item_view, parent, false);
         ViewHolder viewHolder = new ViewHolder(view, new ViewHolder.ImyViewHolderClicks() {
             @Override
-            public void onReminder(long id) {
+            public void onReminder(long id, String type) {
 
                 Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra("REMINDER_TYPE", type);
                 intent.putExtra("REMINDER_ID", id);
                 context.startActivity(intent);
 
@@ -84,8 +86,10 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         Reminder reminder = reminders.get(position);
 
         if (reminder instanceof ManualReminder) {
+            holder.typeName = "MANUAL";
             holder.id = ((ManualReminder) reminder).getId();
         } else if (reminder instanceof AutomaticReminder) {
+            holder.typeName = "AUTOMATIC";
             holder.id = ((AutomaticReminder) reminder).getId();
         }
 
