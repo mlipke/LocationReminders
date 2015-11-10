@@ -38,14 +38,16 @@
             android:theme="@style/AppTheme.NoActionBar" >
         </activity>
 
+        <activity
+            android:name=".activities.DetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+        </activity>
+
         <service
             android:name=".services.LocationService"
             android:enabled="true"
             android:exported="true" >
         </service>
-
-        <activity android:name=".activities.DetailActivity" >
-        </activity>
     </application>
 
 </manifest>
