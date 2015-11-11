@@ -75,6 +75,17 @@ public class ManageActivity extends AppCompatActivity {
         poiTextView.setAdapter(poiAdapter);
 
 
+
+        Button setLocation = (Button) findViewById(R.id.setLocation);
+        setLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent mapIntent = new Intent(ManageActivity.this, SelectLocationActivity.class);
+                startActivity(mapIntent);
+            }
+        });
+
+
         // get selected location detection method
         locationRadioGroup = (RadioGroup)findViewById(R.id.locationRadioGroup);
 

@@ -109,5 +109,6 @@
         <item>veterinary_care</item>
         <item>zoo</item>
     </string-array>
+    <string name="title_activity_select_location">Map</string>
 
 </resources>
