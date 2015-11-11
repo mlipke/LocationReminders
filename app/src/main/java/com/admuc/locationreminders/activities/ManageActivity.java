@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -142,17 +143,20 @@ public class ManageActivity extends AppCompatActivity {
         Button setLocation = (Button) findViewById(R.id.setLocation);
         AutoCompleteTextView poiTextView = (AutoCompleteTextView) findViewById(R.id.poiTextView);
         TextView poiLabel = (TextView) findViewById(R.id.poiLabel);
+        TextInputLayout poiLayout = (TextInputLayout) findViewById(R.id.poiLayout);
 
         if(locationRadioValue.equals("manual")) {
             //hide location radio group and shop button for manual position selection
             setLocation.setVisibility(View.VISIBLE);
             poiTextView.setVisibility(View.INVISIBLE);
+            poiLayout.setVisibility(View.INVISIBLE);
             poiLabel.setText("Set position");
         }
         else {
             // toggle back
             setLocation.setVisibility(View.INVISIBLE);
             poiTextView.setVisibility(View.VISIBLE);
+            poiLayout.setVisibility(View.VISIBLE);
             poiLabel.setText("Select type of POI");
         }
     }
