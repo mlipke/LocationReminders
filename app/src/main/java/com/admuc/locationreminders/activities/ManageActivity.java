@@ -31,6 +31,7 @@ public class ManageActivity extends AppCompatActivity {
 
     private RadioGroup locationRadioGroup;
     private String locationRadioValue;
+    private Reminder reminder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,32 @@ public class ManageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // get fields and values
+        final EditText title = (EditText) findViewById(R.id.title);
+        final EditText note = (EditText) findViewById(R.id.note);
+
+        // get type and reminder id from intent; TODO: implement switch for edit mode
+        Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            String type = intent.getStringExtra("REMINDER_TYPE");
+            long id = intent.getLongExtra("REMINDER_ID", 0);
+
+            if (type.equals("MANUAL")) {
+                reminder = ManualReminder.findById(ManualReminder.class, id);
+            } else if (type.equals("AUTOMATIC")) {
+                reminder = AutomaticReminder.findById(AutomaticReminder.class, id);
+            }
+
+
+            // for debug
+            if (!reminder.getTitle().equals(""))
+                title.setText(reminder.getTitle());
+
+            if (!reminder.getNote().equals(""))
+                note.setText(reminder.getNote());
+        }
+
         arraySpinner = getResources().getStringArray(R.array.poiArray);
 
         ArrayAdapter<String> poiAdapter = new ArrayAdapter<String>(this,
@@ -46,10 +73,6 @@ public class ManageActivity extends AppCompatActivity {
         final AutoCompleteTextView poiTextView = (AutoCompleteTextView)
                 findViewById(R.id.poiTextView);
         poiTextView.setAdapter(poiAdapter);
-
-        // get fields and values
-        final EditText title = (EditText) findViewById(R.id.title);
-        final EditText note = (EditText) findViewById(R.id.note);
 
 
         // get selected location detection method
