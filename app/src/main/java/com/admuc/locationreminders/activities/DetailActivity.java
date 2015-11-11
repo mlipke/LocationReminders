@@ -16,6 +16,10 @@ import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -46,6 +50,9 @@ public class DetailActivity extends AppCompatActivity {
         TextView titleView = (TextView) findViewById(R.id.titleView);
         titleView.setText(reminder.getTitle());
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(new MapListener());
     }
 
 
@@ -106,5 +113,12 @@ public class DetailActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class MapListener implements OnMapReadyCallback {
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+
+        }
     }
 }
