@@ -41,6 +41,14 @@ public class DetailActivity extends AppCompatActivity {
         type = intent.getStringExtra("REMINDER_TYPE");
         _id = intent.getLongExtra("REMINDER_ID", 0);
 
+        setupViews();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(new MapListener());
+    }
+
+    private void setupViews() {
         if (type.equals("MANUAL")) {
             reminder = ManualReminder.findById(ManualReminder.class, _id);
         } else if (type.equals("AUTOMATIC")) {
@@ -49,12 +57,14 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView titleView = (TextView) findViewById(R.id.titleView);
         titleView.setText(reminder.getTitle());
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(new MapListener());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        setupViews();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

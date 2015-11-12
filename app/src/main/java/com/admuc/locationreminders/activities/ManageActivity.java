@@ -106,13 +106,13 @@ public class ManageActivity extends AppCompatActivity {
                     Log.d("Selected POI: ", selectedPoi);
 
                     if (locationRadioValue.equals("automatic")) {
-                        AutomaticReminder reminder = new AutomaticReminder(title.getText().toString(), note.getText().toString(), selectedPoi);
-                        reminder.save();
+                        reminder.setTitle(title.getText().toString());
+                        reminder.setNote(note.getText().toString());
+                        ((AutomaticReminder) reminder).save();
                     } else {
-                        Location location = new Location(1.2, 23.6);
-                        location.setDescription("New Location");
-                        ManualReminder reminder = new ManualReminder(title.getText().toString(), note.getText().toString(), location);
-                        reminder.save();
+                        reminder.setTitle(title.getText().toString());
+                        reminder.setNote(note.getText().toString());
+                        ((ManualReminder) reminder).save();
                     }
 
                     finish();

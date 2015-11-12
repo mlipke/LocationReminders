@@ -36,6 +36,7 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
         return title;
     }
 
+    @Override
     public void setTitle(String title) {
         this.title = title;
     }
@@ -45,6 +46,7 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
         return note;
     }
 
+    @Override
     public void setNote(String note) {
         this.note = note;
     }
@@ -57,5 +59,10 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
     @Override
     public String getLocationDescription() {
         return poi;
+    }
+
+    @Override
+    public void setLocationDescription(String locationDescription) {
+        setPoi(locationDescription);
     }
 }

@@ -45,6 +45,7 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
         return note;
     }
 
+    @Override
     public void setNote(String note) {
         this.note = note;
     }
@@ -65,5 +66,10 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
     @Override
     public String getLocationDescription() {
         return location.toString();
+    }
+
+    @Override
+    public void setLocationDescription(String locationDescription) {
+        this.location.setDescription(locationDescription);
     }
 }
