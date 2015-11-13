@@ -19,8 +19,10 @@ import com.admuc.locationreminders.adapters.ReminderAdapter;
 import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
+import com.admuc.locationreminders.utils.ReminderComparator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -88,6 +90,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Reminder", "item");
             reminders.add(manualReminderIterator.next());
         }
+
+        Collections.sort(reminders, new ReminderComparator());
 
         return reminders;
     }
