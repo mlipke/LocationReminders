@@ -97,8 +97,7 @@ public class ManageActivity extends AppCompatActivity {
                 Log.d("Title:", title.getText().toString());
                 if (title.getText().toString().equals("")) {
                     Snackbar.make(view, "Please add title", Snackbar.LENGTH_SHORT).show();
-                }
-                else {
+                } else {
                     locationRadioValue = ((RadioButton) findViewById(locationRadioGroup.getCheckedRadioButtonId())).getText().toString();
                     Log.d("ReminderType:", locationRadioValue);
 
@@ -106,10 +105,14 @@ public class ManageActivity extends AppCompatActivity {
                     Log.d("Selected POI: ", selectedPoi);
 
                     if (locationRadioValue.equals("automatic")) {
+                        if (reminder == null)
+                            reminder = new AutomaticReminder();
                         reminder.setTitle(title.getText().toString());
                         reminder.setNote(note.getText().toString());
                         ((AutomaticReminder) reminder).save();
                     } else {
+                        if (reminder == null)
+                            reminder = new ManualReminder();
                         reminder.setTitle(title.getText().toString());
                         reminder.setNote(note.getText().toString());
                         ((ManualReminder) reminder).save();
@@ -122,7 +125,6 @@ public class ManageActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
