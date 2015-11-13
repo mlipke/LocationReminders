@@ -49,7 +49,7 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationIcon(R.drawable.circle_24dp);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_18dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
