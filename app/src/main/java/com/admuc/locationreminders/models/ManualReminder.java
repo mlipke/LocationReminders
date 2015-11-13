@@ -5,16 +5,19 @@ import com.orm.SugarRecord;
 /**
  * Created by 4gray on 30.10.15.
  */
-public class ManualReminder extends SugarRecord<ManualReminder> implements Reminder  {
+public class ManualReminder extends SugarRecord<ManualReminder> implements Reminder {
 
     private String title;
     private String note;
+
+    private boolean completed;
 
     private long timestamp;
 
     private Location location;
 
-    public ManualReminder() {}
+    public ManualReminder() {
+    }
 
     public ManualReminder(String title, String note, Location location) {
         this.title = title;
@@ -22,7 +25,6 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
         this.location = location;
 
         timestamp = System.currentTimeMillis();
-
     }
 
     @Override
@@ -36,26 +38,14 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     @Override
     public String getNote() {
         return note;
     }
 
     @Override
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
+    public boolean isCompleted() {
+        return completed;
     }
 
     @Override
@@ -63,9 +53,32 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
         return timestamp;
     }
 
+    public Location getLocation() {
+        return location;
+    }
+
     @Override
     public String getLocationDescription() {
         return location.toString();
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    @Override
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     @Override

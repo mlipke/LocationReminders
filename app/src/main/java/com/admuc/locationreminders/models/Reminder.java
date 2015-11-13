@@ -5,14 +5,20 @@ package com.admuc.locationreminders.models;
  */
 public interface Reminder {
 
+    long getTimestamp();
+
     String getTitle();
     String getNote();
+
     String getLocationDescription();
+
+    boolean isCompleted();
 
     void setTitle(String title);
     void setNote(String note);
+
     void setLocationDescription(String locationDescription);
 
-    long getTimestamp();
+    void setCompleted(boolean completed);
 
 }

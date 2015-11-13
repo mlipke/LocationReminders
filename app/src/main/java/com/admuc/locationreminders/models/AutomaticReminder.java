@@ -11,6 +11,8 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
     private String title;
     private String note;
 
+    private boolean completed;
+
     private long timestamp;
 
     public AutomaticReminder() {}
@@ -27,18 +29,9 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
         return poi;
     }
 
-    public void setPoi(String poi) {
-        this.poi = poi;
-    }
-
     @Override
     public String getTitle() {
         return title;
-    }
-
-    @Override
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     @Override
@@ -47,8 +40,8 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
     }
 
     @Override
-    public void setNote(String note) {
-        this.note = note;
+    public boolean isCompleted() {
+        return completed;
     }
 
     @Override
@@ -59,6 +52,25 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
     @Override
     public String getLocationDescription() {
         return poi;
+    }
+
+    public void setPoi(String poi) {
+        this.poi = poi;
+    }
+
+    @Override
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public void setNote(String note) {
+        this.note = note;
+    }
+
+    @Override
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     @Override

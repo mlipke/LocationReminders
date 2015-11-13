@@ -3,9 +3,8 @@ package com.admuc.locationreminders.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,13 +17,13 @@ import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 
 public class DetailActivity extends AppCompatActivity {
 
     Reminder reminder;
+
     long _id;
     String type;
 
@@ -91,8 +90,7 @@ public class DetailActivity extends AppCompatActivity {
             startActivity(intent);
 
             return true;
-        }
-        else if (id == R.id.action_remove) {
+        } else if (id == R.id.action_remove) {
 
             // show remove confirmation dialog
             AlertDialog.Builder alert = new AlertDialog.Builder(DetailActivity.this);
@@ -102,6 +100,7 @@ public class DetailActivity extends AppCompatActivity {
 
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
                     if (type.equals("MANUAL")) {
                         ManualReminder mReminder = ManualReminder.findById(ManualReminder.class, _id);
                         mReminder.delete();
@@ -111,12 +110,12 @@ public class DetailActivity extends AppCompatActivity {
                     }
 
                     finish();
-                    Toast.makeText(getApplicationContext(),"Reminder was deleted", Toast.LENGTH_SHORT).show();
 
-
+                    Toast.makeText(getApplicationContext(), "Reminder was deleted", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
             });
+
             alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
