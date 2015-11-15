@@ -129,4 +129,13 @@
             android:layout_below="@+id/setLocation"
             android:layout_alignParentStart="true" />
     </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text=""
+        android:id="@+id/selectedLocationText"
+        android:layout_below="@+id/setLocation"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

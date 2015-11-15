@@ -35,7 +35,8 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
 
     private GoogleMap mMap;
     private Marker locationMarker;
-    private com.admuc.locationreminders.models.Location selectedLocation = new com.admuc.locationreminders.models.Location(0,0);
+    String locationDescription;
+    MarkerOptions options = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,15 +94,16 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
+                locationDescription = getAddressFromLatLng(latLng);
 
                 if (locationMarker == null) {
-                    MarkerOptions options = new MarkerOptions().position(latLng).title(getAddressFromLatLng(latLng));
+                    options = new MarkerOptions().position(latLng).title(locationDescription);
                     locationMarker = mMap.addMarker(options);
                 } else {
+                    //update marker
                     locationMarker.setPosition(latLng);
+                    locationMarker.setTitle(locationDescription);
 
-                    selectedLocation.setLat(latLng.latitude);
-                    selectedLocation.setLon(latLng.longitude);
                 }
             }
         });
@@ -139,11 +141,11 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
         if (id == R.id.setLocation) {
 
             Intent intent = new Intent(getApplicationContext(), ManageActivity.class);
-            intent.putExtra("REMINDER_LAT", selectedLocation.getLat());
-            intent.putExtra("REMINDER_LON", selectedLocation.getLon());
-            Log.d("LAT: ", String.valueOf(selectedLocation.getLat()));
-            Log.d("LON: ", String.valueOf(selectedLocation.getLon()));
-            startActivity(intent);
+            intent.putExtra("REMINDER_LAT", locationMarker.getPosition().latitude);
+            intent.putExtra("REMINDER_LON", locationMarker.getPosition().longitude);
+            intent.putExtra("REMINDER_LOCATION", locationDescription);
+            setResult(RESULT_OK, intent);
+            finish();
 
             return true;
         }
