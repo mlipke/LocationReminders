@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,9 +17,13 @@ import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -26,6 +31,7 @@ public class DetailActivity extends AppCompatActivity {
 
     long _id;
     String type;
+    GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,22 +53,35 @@ public class DetailActivity extends AppCompatActivity {
         type = intent.getStringExtra("REMINDER_TYPE");
         _id = intent.getLongExtra("REMINDER_ID", 0);
 
-        setupViews();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
+        mMap = mapFragment.getMap();
         mapFragment.getMapAsync(new MapListener());
+
+        setupViews();
+
     }
 
     private void setupViews() {
+
+
         if (type.equals("MANUAL")) {
             reminder = ManualReminder.findById(ManualReminder.class, _id);
+            double lat = ((ManualReminder) reminder).getLocation().getLat();
+            double lon = ((ManualReminder) reminder).getLocation().getLon();
+
+            LatLng position = new LatLng(lat, lon);
+            MarkerOptions options = new MarkerOptions().position(position);
+            mMap.addMarker(options);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
         } else if (type.equals("AUTOMATIC")) {
             reminder = AutomaticReminder.findById(AutomaticReminder.class, _id);
         }
 
         TextView titleView = (TextView) findViewById(R.id.titleView);
         titleView.setText(reminder.getTitle());
+
     }
 
     @Override

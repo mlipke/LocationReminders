@@ -142,10 +142,10 @@ public class ManageActivity extends AppCompatActivity {
 
             case (1) : {
                 if (resultCode == Activity.RESULT_OK) {
-                    Long lat = data.getLongExtra("REMINDER_LAT", 0);
-                    Long lon = data.getLongExtra("REMINDER_LON", 0);
+                    Double lat = data.getDoubleExtra("REMINDER_LAT", 0);
+                    Double lon = data.getDoubleExtra("REMINDER_LON", 0);
                     selectedLocationDescription = data.getStringExtra("REMINDER_LOCATION");
-                    selectedLocation = new Location(lat, lon);
+                    selectedLocation = new Location(lon, lat);
                     TextView selectedLocationText = (TextView) findViewById(R.id.selectedLocationText);
                     selectedLocationText.setText("Selected location: " + selectedLocationDescription);
                 }

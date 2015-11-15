@@ -37,6 +37,7 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
     private Marker locationMarker;
     String locationDescription;
     MarkerOptions options = null;
+    Boolean locationDetected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,11 +115,12 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
             public void onMyLocationChange(Location location) {
 
                 // move camera only first time by location detection
-                if (locationMarker == null) {
+                if (locationDetected == false) {
                     double lat = location.getLatitude();
                     double lng = location.getLongitude();
                     LatLng ll = new LatLng(lat, lng);
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 20));
+                    locationDetected = true;
                 }
             }
         });
@@ -141,6 +143,7 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
         if (id == R.id.setLocation) {
 
             Intent intent = new Intent(getApplicationContext(), ManageActivity.class);
+            Log.d("select lat;: ", String.valueOf(locationMarker.getPosition().latitude));
             intent.putExtra("REMINDER_LAT", locationMarker.getPosition().latitude);
             intent.putExtra("REMINDER_LON", locationMarker.getPosition().longitude);
             intent.putExtra("REMINDER_LOCATION", locationDescription);
