@@ -27,11 +27,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class DetailActivity extends AppCompatActivity {
 
-    Reminder reminder;
+    private Reminder reminder;
 
-    long _id;
-    String type;
-    GoogleMap mMap;
+    private long _id;
+    private String type;
+    private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +64,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void setupViews() {
-
-
         if (type.equals("MANUAL")) {
             reminder = ManualReminder.findById(ManualReminder.class, _id);
             double lat = ((ManualReminder) reminder).getLocation().getLat();
@@ -81,7 +79,6 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView titleView = (TextView) findViewById(R.id.titleView);
         titleView.setText(reminder.getTitle());
-
     }
 
     @Override
@@ -147,6 +144,12 @@ public class DetailActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_complete) {
             reminder.setCompleted(true);
+
+            if (type.equals("MANUAL")) {
+                ((ManualReminder) reminder).save();
+            } else if (type.equals("AUTOMATIC")) {
+                ((AutomaticReminder) reminder).save();
+            }
 
             finish();
         }

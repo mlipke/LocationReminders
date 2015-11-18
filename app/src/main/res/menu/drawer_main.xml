@@ -5,11 +5,11 @@
         android:id="@+id/group_reminders"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_camara"
+            android:id="@+id/nav_active"
             android:icon="@drawable/ic_notifications_on_24dp"
             android:title="Active Reminders" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_completed"
             android:icon="@drawable/ic_notifications_off_24dp"
             android:title="Past Reminders" />
     </group>
