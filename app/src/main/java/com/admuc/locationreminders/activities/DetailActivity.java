@@ -145,6 +145,10 @@ public class DetailActivity extends AppCompatActivity {
             alert.show();
 
             return true;
+        } else if (id == R.id.action_complete) {
+            reminder.setCompleted(true);
+
+            finish();
         }
 
         return super.onOptionsItemSelected(item);
