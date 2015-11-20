@@ -66,13 +66,17 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_18dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+//        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_18dp);
+//        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                onBackPressed();
+//            }
+//        });
+
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Intent intent = getIntent();
         type = intent.getStringExtra("REMINDER_TYPE");
@@ -195,6 +199,8 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
                 ((AutomaticReminder) reminder).save();
             }
 
+            finish();
+        } else if (id == android.R.id.home) {
             finish();
         }
 

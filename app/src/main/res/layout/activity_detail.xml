@@ -10,8 +10,10 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:background="@drawable/background_gradient"
-        android:layout_height="?attr/actionBarSize"
-        android:paddingTop="16dp">
+        android:layout_height="64dp"
+        android:paddingTop="24dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:popupTheme="@style/AppTheme.PopupOverlay">
 
     </android.support.v7.widget.Toolbar>
 
