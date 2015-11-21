@@ -239,6 +239,8 @@ public class DetailActivity extends AppCompatActivity implements GoogleApiClient
 
     @Override
     public void onResult(Result result) {
+
+        // TODO: auslagern - PlaceAPIRequest
         Log.d("Place API: ", String.valueOf(result.getStatus().getStatus()));
 
         AutocompletePredictionBuffer autocompletePredictions = (AutocompletePredictionBuffer) result;
