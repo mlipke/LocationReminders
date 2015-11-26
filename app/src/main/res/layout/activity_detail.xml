@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.admuc.locationreminders.activities.DetailActivity"
     android:layout_width="match_parent"
+    android:id="@+id/detail_layout"
     android:layout_height="match_parent" >
 
     <android.support.v7.widget.Toolbar
@@ -27,4 +28,13 @@
 
     <include layout="@layout/content_detail" />
 
-</android.support.design.widget.CoordinatorLayout>
+    <ListView
+        android:layout_marginTop="340dp"
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    </ListView>
+
+
+    </android.support.design.widget.CoordinatorLayout>
