@@ -1,14 +1,18 @@
 package com.admuc.locationreminders.activities;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.provider.SyncStateContract;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -30,6 +34,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 public class SelectLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -38,6 +44,8 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
     String locationDescription;
     MarkerOptions options = null;
     Boolean locationDetected = false;
+    LatLng searchedLocation;
+    MenuItem selectedMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,21 +99,10 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
 
         mMap.setMyLocationEnabled(true);
 
-
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(LatLng latLng) {
-                locationDescription = getAddressFromLatLng(latLng);
-
-                if (locationMarker == null) {
-                    options = new MarkerOptions().position(latLng).title(locationDescription);
-                    locationMarker = mMap.addMarker(options);
-                } else {
-                    //update marker
-                    locationMarker.setPosition(latLng);
-                    locationMarker.setTitle(locationDescription);
-
-                }
+               setMarker(latLng);
             }
         });
 
@@ -124,14 +121,58 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
                 }
             }
         });
-
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_map, menu);
+
+        selectedMenuItem = menu.findItem(R.id.setLocation);
+        selectedMenuItem.setVisible(false);
+
+
+        // Retrieve the SearchView and plug it into SearchManager
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                onSearchRequested();
+                Log.d("Search query: ", query);
+
+                Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+                List<Address> addresses = null;
+                try {
+                    addresses = geocoder.getFromLocationName(query, 1);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                if (addresses.size() > 0) {
+                    double latitude = addresses.get(0).getLatitude();
+                    double longitude = addresses.get(0).getLongitude();
+                    Log.d("lat: ", String.valueOf(latitude));
+                    Log.d("lat: ", String.valueOf(longitude));
+                    searchedLocation = new LatLng(latitude, longitude);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchedLocation, 15));
+
+                    setMarker(searchedLocation);
+
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // TODO Auto-generated method stub
+                Log.d("new query: ", newText);
+                return false;
+            }
+        });
+
         return true;
     }
 
@@ -154,5 +195,20 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void setMarker(LatLng latLng) {
+        locationDescription = getAddressFromLatLng(latLng);
+
+        if (locationMarker == null) {
+            options = new MarkerOptions().position(latLng).title(locationDescription);
+            locationMarker = mMap.addMarker(options);
+            selectedMenuItem.setVisible(true);
+        } else {
+            //update marker
+            locationMarker.setPosition(latLng);
+            locationMarker.setTitle(locationDescription);
+
+        }
     }
 }
