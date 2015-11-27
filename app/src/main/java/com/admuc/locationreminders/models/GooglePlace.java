@@ -8,6 +8,7 @@ public class GooglePlace {
     private String category;
     private String rating;
     private String open;
+    private double distance;
 
     public GooglePlace() {
         this.name = "";
@@ -46,5 +47,13 @@ public class GooglePlace {
 
     public String getOpenNow() {
         return open;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 }

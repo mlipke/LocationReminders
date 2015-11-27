@@ -54,10 +54,11 @@ public class MainActivity extends AppCompatActivity {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(new NavigationClickListener());
 
+        /*
         AutomaticReminder ar = new AutomaticReminder("Buy milk", "comment here", "shop");
         ar.save();
         AutomaticReminder ar2 = new AutomaticReminder("Buy cookies", "add notes", "shop");
-        ar2.save();
+        ar2.save();*/
 
         final List<Reminder> reminders = new ArrayList<>();
 

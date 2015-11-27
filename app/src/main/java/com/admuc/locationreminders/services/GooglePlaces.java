@@ -10,6 +10,8 @@ import com.admuc.locationreminders.BuildConfig;
 import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.activities.DetailActivity;
 import com.admuc.locationreminders.models.GooglePlace;
+import com.admuc.locationreminders.utils.MapHelper;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -76,7 +78,7 @@ public class GooglePlaces extends AsyncTask {
             for (int i = 0; i < venuesList.size(); i++) {
                 // make a list of the venus that are loaded in the list.
                 // show the name, the category and the city
-                listTitle.add(i, ((GooglePlace) venuesList.get(i)).getName() + "\nOpen Now: " + ((GooglePlace)venuesList.get(i)).getOpenNow() + "\n(" + ((GooglePlace)venuesList.get(i)).getCategory() + ")");
+                listTitle.add(i, ((GooglePlace) venuesList.get(i)).getName() + "\nOpen Now: " + ((GooglePlace)venuesList.get(i)).getOpenNow() + "\n(" + ((GooglePlace)venuesList.get(i)).getCategory() + ")"+ "\n(" + ((GooglePlace)venuesList.get(i)).getDistance() + ")");
             }
 
             // set the results to the list
@@ -121,7 +123,7 @@ public class GooglePlaces extends AsyncTask {
         return replyString.trim();
     }
 
-    private static ArrayList parseGoogleParse(final String response) {
+    private ArrayList parseGoogleParse(final String response) {
 
         ArrayList temp = new ArrayList();
         try {
@@ -139,6 +141,9 @@ public class GooglePlaces extends AsyncTask {
                     if (jsonArray.getJSONObject(i).has("name")) {
                         poi.setName(jsonArray.getJSONObject(i).optString("name"));
                         poi.setRating(jsonArray.getJSONObject(i).optString("rating", " "));
+                        double distance = MapHelper.CalculationByDistance(new LatLng(locationLat, locationLon),
+                                new LatLng(jsonArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat"), jsonArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
+                        poi.setDistance(distance);
 
                         if (jsonArray.getJSONObject(i).has("opening_hours")) {
                             if (jsonArray.getJSONObject(i).getJSONObject("opening_hours").has("open_now")) {

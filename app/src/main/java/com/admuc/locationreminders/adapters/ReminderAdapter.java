@@ -2,6 +2,7 @@ package com.admuc.locationreminders.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,6 +43,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         public ImageView type;
         public ImageView locationIcon;
         public ImyViewHolderClicks clickListener;
+        public ImageView circleIcon;
 
         public ViewHolder(View itemView, ImyViewHolderClicks clickListener) {
             super(itemView);
@@ -50,6 +52,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
             this.locationString = (TextView) itemView.findViewById(R.id.locationString);
             this.type = (ImageView) itemView.findViewById(R.id.type);
             this.locationIcon = (ImageView) itemView.findViewById(R.id.locationIcon);
+            this.circleIcon = (ImageView) itemView.findViewById(R.id.circle);
             itemView.setOnClickListener(this);
         }
 
@@ -88,6 +91,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         if (reminder instanceof ManualReminder) {
             holder.typeName = "MANUAL";
             holder.id = ((ManualReminder) reminder).getId();
+            holder.circleIcon.setColorFilter(Color.GRAY);
         } else if (reminder instanceof AutomaticReminder) {
             holder.typeName = "AUTOMATIC";
             holder.id = ((AutomaticReminder) reminder).getId();
