@@ -25,6 +25,7 @@ import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
 import com.admuc.locationreminders.utils.ReminderComparator;
+import com.admuc.locationreminders.utils.ReminderHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -90,68 +91,13 @@ public class MainActivity extends AppCompatActivity {
         loadReminders();
     }
 
-
-    private List<Reminder> getAllReminders() {
-        List<Reminder> reminders = new ArrayList<>();
-
-        Iterator<AutomaticReminder> automaticRemindersIterator = AutomaticReminder.findAll(AutomaticReminder.class);
-        while (automaticRemindersIterator.hasNext()) {
-            reminders.add(automaticRemindersIterator.next());
-        }
-
-        Iterator<ManualReminder> manualReminderIterator = ManualReminder.findAll(ManualReminder.class);
-        while (manualReminderIterator.hasNext()) {
-            Log.d("Reminder", "item");
-            reminders.add(manualReminderIterator.next());
-        }
-
-        Collections.sort(reminders, new ReminderComparator());
-
-        return reminders;
-    }
-
-    private List<Reminder> getActiveReminders() {
-        List<Reminder> reminders = new ArrayList<>();
-        Iterator<AutomaticReminder> automaticRemindersIterator = AutomaticReminder.findAsIterator(AutomaticReminder.class, "COMPLETED = ?", "0");
-        while (automaticRemindersIterator.hasNext()) {
-            Log.d("Reminder", "something");
-            reminders.add(automaticRemindersIterator.next());
-        }
-
-        Iterator<ManualReminder> manualReminderIterator = ManualReminder.findAsIterator(ManualReminder.class, "COMPLETED = ?", "0");
-        while (manualReminderIterator.hasNext()) {
-            reminders.add(manualReminderIterator.next());
-        }
-
-        Collections.sort(reminders, new ReminderComparator());
-
-        return reminders;
-    }
-
-    private List<Reminder> getCompletedReminders() {
-        List<Reminder> reminders = new ArrayList<>();
-        Iterator<AutomaticReminder> automaticRemindersIterator = AutomaticReminder.findAsIterator(AutomaticReminder.class, "COMPLETED = ?", "1");
-        while (automaticRemindersIterator.hasNext()) {
-            reminders.add(automaticRemindersIterator.next());
-        }
-
-        Iterator<ManualReminder> manualReminderIterator = ManualReminder.findAsIterator(ManualReminder.class, "COMPLETED = ?", "1");
-        while (manualReminderIterator.hasNext()) {
-            reminders.add(manualReminderIterator.next());
-        }
-
-        Collections.sort(reminders, new ReminderComparator());
-
-        return reminders;
-    }
-
     private void loadReminders() {
         List<Reminder> reminders;
 
         if (active) {
-            reminders = getActiveReminders();
+            reminders = ReminderHelper.getActiveReminders();
         } else {
-            reminders = getCompletedReminders();
+            reminders = ReminderHelper.getCompletedReminders();
         }
 
         adapter.setReminders(reminders);
@@ -205,7 +151,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private enum ReminderState {
-        ACTIVE, COMPLETED
-    }
 }
