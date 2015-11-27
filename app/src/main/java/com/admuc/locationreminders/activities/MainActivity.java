@@ -24,6 +24,7 @@ import com.admuc.locationreminders.adapters.ReminderAdapter;
 import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
+import com.admuc.locationreminders.services.LocationService;
 import com.admuc.locationreminders.utils.ReminderComparator;
 import com.admuc.locationreminders.utils.ReminderHelper;
 import com.admuc.locationreminders.utils.SimpleDividerItemDecoration;
@@ -45,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_drawer);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Intent locationServiceIntent = new Intent(this, LocationService.class);
+        startService(locationServiceIntent);
 
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.open_drawer, R.string.closed_drawer);
