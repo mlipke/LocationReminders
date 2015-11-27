@@ -1,6 +1,8 @@
 package com.admuc.locationreminders.services;
 
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -10,7 +12,9 @@ import com.admuc.locationreminders.BuildConfig;
 import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.activities.DetailActivity;
 import com.admuc.locationreminders.models.GooglePlace;
+import com.admuc.locationreminders.models.Location;
 import com.admuc.locationreminders.utils.MapHelper;
+import com.admuc.locationreminders.utils.NotificationHelper;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.HttpResponse;
@@ -31,13 +35,20 @@ import java.util.List;
  */
 public class GooglePlaces extends AsyncTask {
 
-    String temp;
-    ArrayList venuesList;
-    ArrayAdapter myAdapter;
+    private String temp;
+    private ArrayList venuesList;
+    private ArrayAdapter myAdapter;
     double locationLat;
     double locationLon;
-    ListView listView;
-    Activity activity;
+    private ListView listView;
+    private Activity activity;
+    private Context context;
+
+    public GooglePlaces(double locationLat, double locationLon, Context context) {
+        this.locationLat = locationLat;
+        this.locationLon = locationLon;
+        this.context = context;
+    }
 
     public GooglePlaces(double locationLat, double locationLon, ListView listView, Activity activity) {
         this.locationLat = locationLat;
@@ -69,23 +80,30 @@ public class GooglePlaces extends AsyncTask {
             // we can also stop the progress bar
         } else {
             // all things went right
-
             // parse Google places search result
             venuesList = (ArrayList) parseGoogleParse(temp);
 
-            List listTitle = new ArrayList();
+            if (listView == null && activity == null) {
+                List listTitle = new ArrayList();
 
-            for (int i = 0; i < venuesList.size(); i++) {
-                // make a list of the venus that are loaded in the list.
-                // show the name, the category and the city
-                listTitle.add(i, ((GooglePlace) venuesList.get(i)).getName() + "\nOpen Now: " + ((GooglePlace)venuesList.get(i)).getOpenNow() + "\n(" + ((GooglePlace)venuesList.get(i)).getCategory() + ")"+ "\n(" + ((GooglePlace)venuesList.get(i)).getDistance() + ")");
+                for (int i = 0; i < venuesList.size(); i++) {
+                    // make a list of the venus that are loaded in the list.
+                    // show the name, the category and the city
+                    listTitle.add(i, ((GooglePlace) venuesList.get(i)).getName() + "\nOpen Now: " + ((GooglePlace) venuesList.get(i)).getOpenNow() + "\n(" + ((GooglePlace) venuesList.get(i)).getCategory() + ")" + "\n(" + ((GooglePlace) venuesList.get(i)).getDistance() + ")");
+                }
+
+                // set the results to the list
+                // and show them in the xml
+                myAdapter = new ArrayAdapter(activity, android.R.layout.simple_list_item_1, listTitle);
+                listView.setAdapter(myAdapter);
+            } else {
+                for (int i = 0; i < venuesList.size(); i++) {
+                    if (((GooglePlace)venuesList.get(i)).getDistance() < 200) {
+                        NotificationHelper.createNotification(context);
+                        break;
+                    }
+                }
             }
-
-            // set the results to the list
-            // and show them in the xml
-            myAdapter = new ArrayAdapter(activity, android.R.layout.simple_list_item_1, listTitle);
-            listView.setAdapter(myAdapter);
-
         }
     }
 
@@ -141,8 +159,12 @@ public class GooglePlaces extends AsyncTask {
                     if (jsonArray.getJSONObject(i).has("name")) {
                         poi.setName(jsonArray.getJSONObject(i).optString("name"));
                         poi.setRating(jsonArray.getJSONObject(i).optString("rating", " "));
-                        double distance = MapHelper.CalculationByDistance(new LatLng(locationLat, locationLon),
-                                new LatLng(jsonArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lat"), jsonArray.getJSONObject(i).getJSONObject("geometry").getJSONObject("location").getDouble("lng")));
+                        double distance = MapHelper.CalculationByDistance(new Location(locationLon, locationLat),
+                                new Location(jsonArray.getJSONObject(i)
+                                        .getJSONObject("geometry").getJSONObject("location")
+                                        .getDouble("lat"), jsonArray.getJSONObject(i)
+                                        .getJSONObject("geometry").getJSONObject("location")
+                                        .getDouble("lng")));
                         poi.setDistance(distance);
 
                         if (jsonArray.getJSONObject(i).has("opening_hours")) {
