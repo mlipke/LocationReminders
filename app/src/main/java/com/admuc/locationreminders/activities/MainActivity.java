@@ -23,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private TabLayout tabLayout;
 
+    private ActiveRemindersFragment activeRemindersFragment;
+    private CompletedRemindersFragment completedRemindersFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (activeRemindersFragment != null)
+            activeRemindersFragment.notifyDataSetChanged();
+        if (completedRemindersFragment != null)
+            completedRemindersFragment.notifyDataSetChanged();
     }
 
     @Override
@@ -73,9 +81,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        activeRemindersFragment = new ActiveRemindersFragment();
+        completedRemindersFragment = new CompletedRemindersFragment();
+
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment("ACTIVE REMINDERS", new ActiveRemindersFragment());
-        adapter.addFragment("COMPLETED REMINDERS", new CompletedRemindersFragment());
+        adapter.addFragment("ACTIVE", activeRemindersFragment);
+        adapter.addFragment("COMPLETED", completedRemindersFragment);
+
         viewPager.setAdapter(adapter);
     }
 

@@ -47,8 +47,10 @@ public class CompletedRemindersFragment extends Fragment {
         return view;
     }
 
-    public void notifyDatasetChanged() {
-        adapter.setReminders(ReminderHelper.getActiveReminders());
-        adapter.notifyDataSetChanged();
+    public void notifyDataSetChanged() {
+        if (adapter != null) {
+            adapter.setReminders(ReminderHelper.getActiveReminders());
+            adapter.notifyDataSetChanged();
+        }
     }
 }
