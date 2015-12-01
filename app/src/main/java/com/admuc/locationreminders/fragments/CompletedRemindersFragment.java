@@ -49,7 +49,7 @@ public class CompletedRemindersFragment extends Fragment {
 
     public void notifyDataSetChanged() {
         if (adapter != null) {
-            adapter.setReminders(ReminderHelper.getActiveReminders());
+            adapter.setReminders(ReminderHelper.getCompletedReminders());
             adapter.notifyDataSetChanged();
         }
     }
