@@ -38,8 +38,8 @@ public class GooglePlaces extends AsyncTask {
     private String temp;
     private ArrayList venuesList;
     private ArrayAdapter myAdapter;
-    double locationLat;
-    double locationLon;
+    private double locationLat;
+    private double locationLon;
     private ListView listView;
     private Activity activity;
     private Context context;
