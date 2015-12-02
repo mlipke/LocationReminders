@@ -41,11 +41,11 @@ public class SelectLocationActivity extends AppCompatActivity implements OnMapRe
 
     private GoogleMap mMap;
     private Marker locationMarker;
-    String locationDescription;
-    MarkerOptions options = null;
-    Boolean locationDetected = false;
-    LatLng searchedLocation;
-    MenuItem selectedMenuItem;
+    private String locationDescription;
+    private MarkerOptions options = null;
+    private Boolean locationDetected = false;
+    private LatLng searchedLocation;
+    private MenuItem selectedMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

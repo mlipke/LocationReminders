@@ -15,6 +15,7 @@ import com.admuc.locationreminders.models.GooglePlace;
 import com.admuc.locationreminders.models.Location;
 import com.admuc.locationreminders.utils.MapHelper;
 import com.admuc.locationreminders.utils.NotificationHelper;
+import com.admuc.locationreminders.utils.PlacesAPIRequestBuilder;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.HttpResponse;
@@ -36,23 +37,22 @@ import java.util.List;
 public class GooglePlaces extends AsyncTask {
 
     private String temp;
+    private String type;
     private ArrayList venuesList;
     private ArrayAdapter myAdapter;
-    private double locationLat;
-    private double locationLon;
+    private Location location;
     private ListView listView;
     private Activity activity;
     private Context context;
 
-    public GooglePlaces(double locationLat, double locationLon, Context context) {
-        this.locationLat = locationLat;
-        this.locationLon = locationLon;
+    public GooglePlaces(Location location, String type, Context context) {
+        this.type = type;
+        this.location = location;
         this.context = context;
     }
 
-    public GooglePlaces(double locationLat, double locationLon, ListView listView, Activity activity) {
-        this.locationLat = locationLat;
-        this.locationLon = locationLon;
+    public GooglePlaces(Location location, ListView listView, Activity activity) {
+        this.location = location;
         this.listView = listView;
         this.activity = activity;
     }
@@ -60,10 +60,21 @@ public class GooglePlaces extends AsyncTask {
     @Override
     protected Object doInBackground(Object[] params) {
         // make Call to the url
-        temp = makeCall("https://maps.googleapis.com/maps/api/place/search/json?location=" + locationLat + "," + locationLon + "&radius=100&sensor=true&key=" + BuildConfig.PLACES_WEB_SERVICE_API);
+        //temp = makeCall("https://maps.googleapis.com/maps/api/place/search/json?location=" + locationLat + "," + locationLon + "&types=" + type + "&radius=200&sensor=true&key=" + BuildConfig.PLACES_WEB_SERVICE_API);
+        temp = makeCall(PlacesAPIRequestBuilder.build(location)
+                .setType(type)
+                .setRadius(200)
+                .setSensor(true)
+                .setKey(BuildConfig.PLACES_WEB_SERVICE_API)
+                .get());
 
         //print the call in the console
-        System.out.println("https://maps.googleapis.com/maps/api/place/search/json?location=" + locationLat + "," + locationLon + "&radius=100&sensor=true&key=" + BuildConfig.PLACES_WEB_SERVICE_API);
+        System.out.println(PlacesAPIRequestBuilder.build(location)
+                .setType(type)
+                .setRadius(200)
+                .setSensor(true)
+                .setKey(BuildConfig.PLACES_WEB_SERVICE_API)
+                .get());
         return "";
     }
 
@@ -135,6 +146,7 @@ public class GooglePlaces extends AsyncTask {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         System.out.println(replyString);
 
         // trim the whitespaces
@@ -159,7 +171,7 @@ public class GooglePlaces extends AsyncTask {
                     if (jsonArray.getJSONObject(i).has("name")) {
                         poi.setName(jsonArray.getJSONObject(i).optString("name"));
                         poi.setRating(jsonArray.getJSONObject(i).optString("rating", " "));
-                        double distance = MapHelper.CalculationByDistance(new Location(locationLon, locationLat),
+                        double distance = MapHelper.CalculationByDistance(location,
                                 new Location(jsonArray.getJSONObject(i)
                                         .getJSONObject("geometry").getJSONObject("location")
                                         .getDouble("lng"), jsonArray.getJSONObject(i)

@@ -145,7 +145,7 @@ public class ManageActivity extends AppCompatActivity {
                     Double lat = data.getDoubleExtra("REMINDER_LAT", 0);
                     Double lon = data.getDoubleExtra("REMINDER_LON", 0);
                     selectedLocationDescription = data.getStringExtra("REMINDER_LOCATION");
-                    selectedLocation = new Location(lon, lat);
+                    selectedLocation = new Location(lat, lon);
                     TextView selectedLocationText = (TextView) findViewById(R.id.selectedLocationText);
                     selectedLocationText.setText("Selected location: " + selectedLocationDescription);
                 }

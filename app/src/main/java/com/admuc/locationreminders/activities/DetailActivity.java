@@ -23,6 +23,7 @@ import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
 import com.admuc.locationreminders.services.GooglePlaces;
+import com.admuc.locationreminders.utils.MapHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,8 +40,6 @@ public class DetailActivity extends AppCompatActivity {
     private long _id;
     private String type;
     private GoogleMap mMap;
-    private double _locationLat;
-    private double _locationLon;
     private boolean _isCompleted;
     ListView poiListView;
 
@@ -53,7 +52,6 @@ public class DetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         Intent intent = getIntent();
@@ -83,15 +81,12 @@ public class DetailActivity extends AppCompatActivity {
     private void setupViews() {
         if (type.equals("MANUAL")) {
             reminder = ManualReminder.findById(ManualReminder.class, _id);
-            _locationLat = ((ManualReminder) reminder).getLocation().getLat();
-            _locationLon = ((ManualReminder) reminder).getLocation().getLon();
 
-
-            LatLng position = new LatLng(_locationLat, _locationLon);
+            LatLng position = MapHelper.convertLatLng(((ManualReminder)reminder).getLocation());
             MarkerOptions options = new MarkerOptions().position(position);
             mMap.addMarker(options);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
-            new GooglePlaces(_locationLat, _locationLon, poiListView, this).execute();
+            new GooglePlaces(((ManualReminder)reminder).getLocation(), poiListView, this).execute();
         }
         else if (type.equals("AUTOMATIC")) {
             reminder = AutomaticReminder.findById(AutomaticReminder.class, _id);
@@ -105,11 +100,9 @@ public class DetailActivity extends AppCompatActivity {
                 public void onMyLocationChange(Location location) {
                     double lat = location.getLatitude();
                     double lng = location.getLongitude();
-                    _locationLat = lat;
-                    _locationLon = lng;
                     LatLng ll = new LatLng(lat, lng);
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-                    new GooglePlaces(_locationLat, _locationLon, poiListView, thisAct).execute();
+                    new GooglePlaces(new com.admuc.locationreminders.models.Location(lat, lng), poiListView, thisAct).execute();
                 }
             });
         }

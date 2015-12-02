@@ -65,7 +65,7 @@ public class LocationService extends Service implements LocationListener {
                 for (int i = 0; i < activeReminders.size(); i++) {
                     if (activeReminders.get(i) instanceof AutomaticReminder) {
                         if (lastLocation != null) {
-                            new GooglePlaces(lastLocation.getLatitude(), lastLocation.getLongitude(), LocationService.this).execute();
+                            new GooglePlaces(MapHelper.convertLocation(lastLocation), ((AutomaticReminder) activeReminders.get(i)).getPoi(), LocationService.this).execute();
                         }
                     } else {
                         if (lastLocation != null) {

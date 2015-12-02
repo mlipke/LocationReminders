@@ -7,15 +7,19 @@ import com.orm.SugarRecord;
  */
 public class Location extends SugarRecord<Location> {
 
-    private double lon;
     private double lat;
+    private double lon;
 
     private String description;
 
     public Location() {}
 
-    public Location(double lon, double lat) {
+    public Location(double lat, double lon) {
         this.lon = lon;
+        this.lat = lat;
+    }
+
+    public void setLat(double lat) {
         this.lat = lat;
     }
 
@@ -23,20 +27,16 @@ public class Location extends SugarRecord<Location> {
         this.lon = lon;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public double getLon() {
-        return lon;
-    }
-
     public double getLat() {
         return lat;
+    }
+
+    public double getLon() {
+        return lon;
     }
 
     @Override
