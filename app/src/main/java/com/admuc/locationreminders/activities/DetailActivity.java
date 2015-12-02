@@ -41,6 +41,7 @@ public class DetailActivity extends AppCompatActivity {
     private GoogleMap mMap;
     private double _locationLat;
     private double _locationLon;
+    private boolean _isCompleted;
     ListView poiListView;
 
     @Override
@@ -85,6 +86,7 @@ public class DetailActivity extends AppCompatActivity {
             _locationLat = ((ManualReminder) reminder).getLocation().getLat();
             _locationLon = ((ManualReminder) reminder).getLocation().getLon();
 
+
             LatLng position = new LatLng(_locationLat, _locationLon);
             MarkerOptions options = new MarkerOptions().position(position);
             mMap.addMarker(options);
@@ -112,6 +114,8 @@ public class DetailActivity extends AppCompatActivity {
             });
         }
 
+        _isCompleted = reminder.isCompleted();
+
         TextView titleView = (TextView) findViewById(R.id.titleView);
         titleView.setText(reminder.getTitle());
     }
@@ -131,6 +135,13 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_detail, menu);
+
+        MenuItem completed = menu.findItem(R.id.action_complete);
+
+        if (_isCompleted)
+            completed.setVisible(false);
+
+
         return true;
     }
 
