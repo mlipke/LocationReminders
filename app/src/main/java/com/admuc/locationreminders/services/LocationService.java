@@ -42,6 +42,8 @@ public class LocationService extends Service {
         HandlerThread thread = new HandlerThread("ServiceStartArguments",
                 Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
+
+        buildGoogleApiClient();
     }
 
     @Override
@@ -51,22 +53,23 @@ public class LocationService extends Service {
         TimerTask locationCheckTask = new TimerTask() {
             @Override
             public void run() {
-                // new GooglePlaces().execute(51.025914, 13.723698, )
+
 
                 activeReminders = ReminderHelper.getActiveReminders();
 
                 for (int i = 0; i < activeReminders.size(); i++) {
                     if (activeReminders.get(i) instanceof AutomaticReminder) {
                         if (lastLocation != null) {
-                            new GooglePlaces(lastLocation.getLatitude(), lastLocation.getLongitude(), LocationService.this).execute();
+                            new GooglePlaces(51.025914, 13.723698, LocationService.this).execute();
+                            //new GooglePlaces(lastLocation.getLatitude(), lastLocation.getLongitude(), LocationService.this).execute();
                         }
                     } else {
                         if (lastLocation != null) {
                             ManualReminder r = (ManualReminder)activeReminders.get(i);
                             double distance = MapHelper.CalculationByDistance(r.getLocation(),
                                     MapHelper.convertLocation(lastLocation));
-
-                            if (distance < 200) {
+                            Log.d("distance: ", String.valueOf(distance));
+                            if (distance < 0.2) {
                                 NotificationHelper.createNotification(LocationService.this);
                             }
                         }
