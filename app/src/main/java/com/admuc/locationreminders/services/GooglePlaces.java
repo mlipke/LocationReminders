@@ -83,7 +83,7 @@ public class GooglePlaces extends AsyncTask {
             // parse Google places search result
             venuesList = (ArrayList) parseGoogleParse(temp);
 
-            if (listView == null && activity == null) {
+            if (listView != null && activity != null) {
                 List listTitle = new ArrayList();
 
                 for (int i = 0; i < venuesList.size(); i++) {
@@ -98,7 +98,7 @@ public class GooglePlaces extends AsyncTask {
                 listView.setAdapter(myAdapter);
             } else {
                 for (int i = 0; i < venuesList.size(); i++) {
-                    if (((GooglePlace)venuesList.get(i)).getDistance() < 200) {
+                    if (((GooglePlace)venuesList.get(i)).getDistance() < 0.2) {
                         NotificationHelper.createNotification(context);
                         break;
                     }
@@ -162,9 +162,9 @@ public class GooglePlaces extends AsyncTask {
                         double distance = MapHelper.CalculationByDistance(new Location(locationLon, locationLat),
                                 new Location(jsonArray.getJSONObject(i)
                                         .getJSONObject("geometry").getJSONObject("location")
-                                        .getDouble("lat"), jsonArray.getJSONObject(i)
+                                        .getDouble("lng"), jsonArray.getJSONObject(i)
                                         .getJSONObject("geometry").getJSONObject("location")
-                                        .getDouble("lng")));
+                                        .getDouble("lat")));
                         poi.setDistance(distance);
 
                         if (jsonArray.getJSONObject(i).has("opening_hours")) {
