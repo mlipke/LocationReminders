@@ -95,6 +95,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         } else if (reminder instanceof AutomaticReminder) {
             holder.typeName = "AUTOMATIC";
             holder.id = ((AutomaticReminder) reminder).getId();
+            holder.locationIcon.setImageResource(R.drawable.ic_store_24dp);
+            holder.locationIcon.setColorFilter(Color.parseColor("#7f7f7f"));
         }
 
         holder.title.setText(reminder.getTitle());
