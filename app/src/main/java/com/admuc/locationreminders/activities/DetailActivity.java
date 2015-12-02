@@ -67,6 +67,7 @@ public class DetailActivity extends AppCompatActivity {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mMap = mapFragment.getMap();
+        mMap.getUiSettings().setScrollGesturesEnabled(false);
         mapFragment.getMapAsync(new MapListener());
 
         poiListView = (ListView) findViewById(R.id.listView);
