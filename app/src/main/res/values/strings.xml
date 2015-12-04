@@ -11,6 +11,7 @@
     <string name="closed_drawer">Drawer closed</string>
     <string name="title_activity_manage">ManageActivity</string>
 
+    <string name="settings_label">Settings</string>
 
     <string-array name="poiArray">
         <item>accounting</item>
@@ -110,6 +111,7 @@
         <item>veterinary_care</item>
         <item>zoo</item>
     </string-array>
+
     <string name="title_activity_select_location">Map</string>
 
 </resources>
