@@ -1,4 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Gerneral">
 
+        <CheckBoxPreference
+            android:key="pref_accuracy"
+            android:title="Location accuracy"
+            android:summary="Always use high accuracy location"
+            android:defaultValue="false" />
+
+        <ListPreference
+            android:key="pref_frequency"
+            android:title="Update frequency"
+            android:summary="%s"
+            android:entries="@array/pref_freq_desc"
+            android:entryValues="@array/pref_freq"
+            android:defaultValue="freq_mid" />
+
+        <ListPreference
+            android:key="pref_suggestions"
+            android:title="Suggestions"
+            android:summary="%s"
+            android:entries="@array/pref_sug"
+            android:entryValues="@array/pref_sug"
+            android:defaultValue="5" />
+
+    </PreferenceCategory>
 </PreferenceScreen>
