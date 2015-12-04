@@ -65,7 +65,7 @@ public class LocationService extends Service implements LocationListener {
                 for (int i = 0; i < activeReminders.size(); i++) {
                     if (activeReminders.get(i) instanceof AutomaticReminder) {
                         if (lastLocation != null) {
-                            new GooglePlaces(MapHelper.convertLocation(lastLocation), ((AutomaticReminder) activeReminders.get(i)).getPoi(), LocationService.this).execute();
+                            new GooglePlaces(MapHelper.convertLocation(lastLocation), ((AutomaticReminder) activeReminders.get(i)).getPoi(), LocationService.this, activeReminders.get(i)).execute();
                         }
                     } else {
                         if (lastLocation != null) {
@@ -74,7 +74,7 @@ public class LocationService extends Service implements LocationListener {
                                     MapHelper.convertLocation(lastLocation));
                             Log.d("distance: ", String.valueOf(distance));
                             if (distance < 0.2) {
-                                NotificationHelper.createNotification(LocationService.this);
+                                NotificationHelper.createNotification(LocationService.this, activeReminders.get(i), distance);
                             }
                         }
                     }

@@ -13,6 +13,7 @@ import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.activities.DetailActivity;
 import com.admuc.locationreminders.models.GooglePlace;
 import com.admuc.locationreminders.models.Location;
+import com.admuc.locationreminders.models.Reminder;
 import com.admuc.locationreminders.utils.MapHelper;
 import com.admuc.locationreminders.utils.NotificationHelper;
 import com.admuc.locationreminders.utils.PlacesAPIRequestBuilder;
@@ -45,7 +46,7 @@ public class GooglePlaces extends AsyncTask {
     private Activity activity;
     private Context context;
 
-    public GooglePlaces(Location location, String type, Context context) {
+    public GooglePlaces(Location location, String type, Context context, Reminder reminder) {
         this.type = type;
         this.location = location;
         this.context = context;
@@ -100,7 +101,11 @@ public class GooglePlaces extends AsyncTask {
                 for (int i = 0; i < venuesList.size(); i++) {
                     // make a list of the venus that are loaded in the list.
                     // show the name, the category and the city
-                    listTitle.add(i, ((GooglePlace) venuesList.get(i)).getName() + "\nOpen Now: " + ((GooglePlace) venuesList.get(i)).getOpenNow() + "\n(" + ((GooglePlace) venuesList.get(i)).getCategory() + ")" + "\n(" + ((GooglePlace) venuesList.get(i)).getDistance() + ")");
+                    listTitle.add(i,
+                            ((GooglePlace) venuesList.get(i)).getName() +
+                            "\nOpen Now: " + ((GooglePlace) venuesList.get(i)).getOpenNow() +
+                            "\n(" + ((GooglePlace) venuesList.get(i)).getCategory() + ")" +
+                            "\n(" + ((GooglePlace) venuesList.get(i)).getDistance() + ")");
                 }
 
                 // set the results to the list
@@ -110,7 +115,7 @@ public class GooglePlaces extends AsyncTask {
             } else {
                 for (int i = 0; i < venuesList.size(); i++) {
                     if (((GooglePlace)venuesList.get(i)).getDistance() < 0.2) {
-                        NotificationHelper.createNotification(context);
+                        NotificationHelper.createNotification(context, null, ((GooglePlace) venuesList.get(i)).getDistance());
                         break;
                     }
                 }
