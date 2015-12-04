@@ -174,9 +174,9 @@ public class GooglePlaces extends AsyncTask {
                         double distance = MapHelper.CalculationByDistance(location,
                                 new Location(jsonArray.getJSONObject(i)
                                         .getJSONObject("geometry").getJSONObject("location")
-                                        .getDouble("lng"), jsonArray.getJSONObject(i)
+                                        .getDouble("lat"), jsonArray.getJSONObject(i)
                                         .getJSONObject("geometry").getJSONObject("location")
-                                        .getDouble("lat")));
+                                        .getDouble("lng")));
                         poi.setDistance(distance);
 
                         if (jsonArray.getJSONObject(i).has("opening_hours")) {

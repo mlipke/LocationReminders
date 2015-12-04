@@ -26,7 +26,7 @@ public class MapHelper {
     }
 
     public static Location convertLocation(android.location.Location location) {
-        return new Location(location.getLongitude(), location.getLatitude());
+        return new Location(location.getLatitude(), location.getLongitude());
     }
 
     public static LatLng convertLatLng(Location location) {
