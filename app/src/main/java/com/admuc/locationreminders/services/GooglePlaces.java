@@ -65,7 +65,6 @@ public class GooglePlaces extends AsyncTask {
         temp = makeCall(PlacesAPIRequestBuilder.build(location)
                 .setType(type)
                 .setRadius(200)
-                .setSensor(true)
                 .setKey(BuildConfig.PLACES_WEB_SERVICE_API)
                 .get());
 
@@ -73,7 +72,6 @@ public class GooglePlaces extends AsyncTask {
         System.out.println(PlacesAPIRequestBuilder.build(location)
                 .setType(type)
                 .setRadius(200)
-                .setSensor(true)
                 .setKey(BuildConfig.PLACES_WEB_SERVICE_API)
                 .get());
         return "";

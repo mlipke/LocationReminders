@@ -19,7 +19,6 @@ public class PlacesAPIRequestBuilder {
         private Location location;
         private String type;
         private double radius;
-        private boolean sensor;
         private String key;
 
         private String parameters;
@@ -46,12 +45,6 @@ public class PlacesAPIRequestBuilder {
             return this;
         }
 
-        public BuilderInstance setSensor(boolean sensor) {
-            this.sensor = sensor;
-
-            return this;
-        }
-
         public BuilderInstance setKey(String key) {
             this.key = key;
 
@@ -62,7 +55,6 @@ public class PlacesAPIRequestBuilder {
             return BASE + "?location=" + location.getLat() + "," + location.getLon()
                     + "&type=" + type
                     + "&radius=" + Double.toString(radius)
-                    + "&sensor=" + Boolean.toString(sensor)
                     + "&key=" + key;
         }
 
