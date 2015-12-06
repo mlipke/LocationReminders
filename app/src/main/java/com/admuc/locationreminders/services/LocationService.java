@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,6 +13,7 @@ import android.os.Bundle;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Process;
+import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
@@ -28,9 +30,12 @@ import java.util.TimerTask;
 
 public class LocationService extends Service implements LocationListener {
 
+    private static final int FREQ_LOW = 1000 * 60 * 5; // five minutes
+    private static final int FREQ_MID = 1000 * 60 * 3; // three minutes
+    private static final int FREQ_HIGH = 1000 * 60; // one minute
+
     private Location lastLocation = null;
     private List<Reminder> activeReminders;
-    //private GoogleApiClient googleApiClient;
     private LocationManager locationManager;
 
     public LocationService() {
@@ -42,7 +47,6 @@ public class LocationService extends Service implements LocationListener {
                 Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
 
-        //buildGoogleApiClient();
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("Location", "Forbidden");
@@ -58,8 +62,6 @@ public class LocationService extends Service implements LocationListener {
         TimerTask locationCheckTask = new TimerTask() {
             @Override
             public void run() {
-
-
                 activeReminders = ReminderHelper.getActiveReminders();
 
                 for (int i = 0; i < activeReminders.size(); i++) {
@@ -84,7 +86,25 @@ public class LocationService extends Service implements LocationListener {
             }
         };
 
-        timer.scheduleAtFixedRate(locationCheckTask, 10000, 10000);
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String rate = preferences.getString("pref_frequency", "pref_not_set");
+        Log.d("Rate", rate);
+
+        switch (rate) {
+            case "freq_low":
+                timer.scheduleAtFixedRate(locationCheckTask, 10000, FREQ_LOW);
+                break;
+            case "freq_mid":
+                timer.scheduleAtFixedRate(locationCheckTask, 10000, FREQ_MID);
+                break;
+            case "freq_high":
+                timer.scheduleAtFixedRate(locationCheckTask, 10000, FREQ_HIGH);
+                break;
+            default:
+                timer.scheduleAtFixedRate(locationCheckTask, 10000, 10000);
+                break;
+        }
 
         return START_STICKY;
     }
