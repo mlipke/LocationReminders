@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.admuc.locationreminders.BuildConfig;
 import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.activities.DetailActivity;
+import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.GooglePlace;
 import com.admuc.locationreminders.models.Location;
 import com.admuc.locationreminders.models.Reminder;
@@ -35,31 +36,30 @@ import java.util.List;
 /**
  * Created by 4gray on 26.11.15.
  */
-public class GooglePlaces extends AsyncTask {
+public class GooglePlaces extends AsyncTask<Void, Void, Void> {
+
+    private PlacesCallback callback;
 
     private String temp;
     private String type;
     private ArrayList venuesList;
     private ArrayAdapter myAdapter;
     private Location location;
-    private ListView listView;
-    private Activity activity;
     private Context context;
 
-    public GooglePlaces(Location location, String type, Context context, Reminder reminder) {
-        this.type = type;
+    public GooglePlaces(Location location, Reminder reminder, PlacesCallback callback) {
         this.location = location;
-        this.context = context;
-    }
+        this.callback = callback;
 
-    public GooglePlaces(Location location, ListView listView, Activity activity) {
-        this.location = location;
-        this.listView = listView;
-        this.activity = activity;
+        if (reminder instanceof AutomaticReminder) {
+            this.type = ((AutomaticReminder) reminder).getPoi();
+        } else {
+            this.type = null;
+        }
     }
 
     @Override
-    protected Object doInBackground(Object[] params) {
+    protected Void doInBackground(Void[] params) {
         // make Call to the url
         //temp = makeCall("https://maps.googleapis.com/maps/api/place/search/json?location=" + locationLat + "," + locationLon + "&types=" + type + "&radius=200&sensor=true&key=" + BuildConfig.PLACES_WEB_SERVICE_API);
         temp = makeCall(PlacesAPIRequestBuilder.build(location)
@@ -74,7 +74,8 @@ public class GooglePlaces extends AsyncTask {
                 .setRadius(200)
                 .setKey(BuildConfig.PLACES_WEB_SERVICE_API)
                 .get());
-        return "";
+
+        return null;
     }
 
     @Override
@@ -83,42 +84,12 @@ public class GooglePlaces extends AsyncTask {
     }
 
     @Override
-    protected void onPostExecute(Object o) {
+    protected void onPostExecute(Void o) {
         super.onPostExecute(o);
-        if (temp == null) {
-            // we have an error to the call
-            // we can also stop the progress bar
-        } else {
-            // all things went right
-            // parse Google places search result
-            venuesList = (ArrayList) parseGoogleParse(temp);
 
-            if (listView != null && activity != null) {
-                List listTitle = new ArrayList();
+        if (temp != null)
+            callback.call(temp);
 
-                for (int i = 0; i < venuesList.size(); i++) {
-                    // make a list of the venus that are loaded in the list.
-                    // show the name, the category and the city
-                    listTitle.add(i,
-                            ((GooglePlace) venuesList.get(i)).getName() +
-                            "\nOpen Now: " + ((GooglePlace) venuesList.get(i)).getOpenNow() +
-                            "\n(" + ((GooglePlace) venuesList.get(i)).getCategory() + ")" +
-                            "\n(" + ((GooglePlace) venuesList.get(i)).getDistance() + ")");
-                }
-
-                // set the results to the list
-                // and show them in the xml
-                myAdapter = new ArrayAdapter(activity, android.R.layout.simple_list_item_1, listTitle);
-                listView.setAdapter(myAdapter);
-            } else {
-                for (int i = 0; i < venuesList.size(); i++) {
-                    if (((GooglePlace)venuesList.get(i)).getDistance() < 0.2) {
-                        NotificationHelper.createNotification(context, null, ((GooglePlace) venuesList.get(i)).getDistance());
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     public static String makeCall(String url) {
@@ -156,59 +127,4 @@ public class GooglePlaces extends AsyncTask {
         return replyString.trim();
     }
 
-    private ArrayList parseGoogleParse(final String response) {
-
-        ArrayList temp = new ArrayList();
-        try {
-
-            // make an jsonObject in order to parse the response
-            JSONObject jsonObject = new JSONObject(response);
-
-            // make an jsonObject in order to parse the response
-            if (jsonObject.has("results")) {
-
-                JSONArray jsonArray = jsonObject.getJSONArray("results");
-
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    GooglePlace poi = new GooglePlace();
-                    if (jsonArray.getJSONObject(i).has("name")) {
-                        poi.setName(jsonArray.getJSONObject(i).optString("name"));
-                        poi.setRating(jsonArray.getJSONObject(i).optString("rating", " "));
-                        double distance = MapHelper.CalculationByDistance(location,
-                                new Location(jsonArray.getJSONObject(i)
-                                        .getJSONObject("geometry").getJSONObject("location")
-                                        .getDouble("lat"), jsonArray.getJSONObject(i)
-                                        .getJSONObject("geometry").getJSONObject("location")
-                                        .getDouble("lng")));
-                        poi.setDistance(distance);
-
-                        if (jsonArray.getJSONObject(i).has("opening_hours")) {
-                            if (jsonArray.getJSONObject(i).getJSONObject("opening_hours").has("open_now")) {
-                                if (jsonArray.getJSONObject(i).getJSONObject("opening_hours").getString("open_now").equals("true")) {
-                                    poi.setOpenNow("YES");
-                                } else {
-                                    poi.setOpenNow("NO");
-                                }
-                            }
-                        } else {
-                            poi.setOpenNow("Not Known");
-                        }
-                        if (jsonArray.getJSONObject(i).has("types")) {
-                            JSONArray typesArray = jsonArray.getJSONObject(i).getJSONArray("types");
-
-                            for (int j = 0; j < typesArray.length(); j++) {
-                                poi.setCategory(typesArray.getString(j) + ", " + poi.getCategory());
-                            }
-                        }
-                    }
-                    temp.add(poi);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ArrayList();
-        }
-        return temp;
-
-    }
 }

@@ -1,11 +1,9 @@
 package com.admuc.locationreminders.activities;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,15 +12,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.models.AutomaticReminder;
+import com.admuc.locationreminders.models.GooglePlace;
+import com.admuc.locationreminders.models.Location;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
 import com.admuc.locationreminders.services.GooglePlaces;
+import com.admuc.locationreminders.services.PlacesCallback;
+import com.admuc.locationreminders.utils.GoogleParser;
 import com.admuc.locationreminders.utils.MapHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,6 +33,9 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -41,7 +47,7 @@ public class DetailActivity extends AppCompatActivity {
     private String type;
     private GoogleMap mMap;
     private boolean _isCompleted;
-    ListView poiListView;
+    private ListView poiListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,23 +93,23 @@ public class DetailActivity extends AppCompatActivity {
             MarkerOptions options = new MarkerOptions().position(position);
             mMap.addMarker(options);
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
-            new GooglePlaces(((ManualReminder)reminder).getLocation(), poiListView, this).execute();
-        }
-        else if (type.equals("AUTOMATIC")) {
+
+            Location location = ((ManualReminder) reminder).getLocation();
+            new GooglePlaces(location, reminder, new Callback(location)).execute();
+        } else if (type.equals("AUTOMATIC")) {
             reminder = AutomaticReminder.findById(AutomaticReminder.class, _id);
+
             mMap.setMyLocationEnabled(true);
-
-            final Activity thisAct = this;
-
             mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-
                 @Override
-                public void onMyLocationChange(Location location) {
+                public void onMyLocationChange(android.location.Location location) {
                     double lat = location.getLatitude();
                     double lng = location.getLongitude();
                     LatLng ll = new LatLng(lat, lng);
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-                    new GooglePlaces(new com.admuc.locationreminders.models.Location(lat, lng), poiListView, thisAct).execute();
+
+                    Location loc = new Location(lat, lng);
+                    new GooglePlaces(loc, reminder, new Callback(loc)).execute();
                 }
             });
         }
@@ -211,5 +217,36 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    private class Callback implements PlacesCallback {
+
+        private Location location;
+
+        public Callback(Location location) {
+            this.location = location;
+        }
+
+
+        @Override
+        public void call(String response) {
+            ArrayList<GooglePlace> venuesList = GoogleParser.parse(response, location);
+
+            List listTitle = new ArrayList();
+
+            for (int i = 0; i < venuesList.size(); i++) {
+                // make a list of the venus that are loaded in the list.
+                // show the name, the category and the city
+                listTitle.add(i,
+                        venuesList.get(i).getName() +
+                                "\nOpen Now: " + venuesList.get(i).getOpenNow() +
+                                "\n(" + venuesList.get(i).getCategory() + ")" +
+                                "\n(" + venuesList.get(i).getDistance() + ")");
+            }
+
+            // set the results to the list
+            // and show them in the xml
+            ArrayAdapter myAdapter = new ArrayAdapter(DetailActivity.this, android.R.layout.simple_list_item_1, listTitle);
+            poiListView.setAdapter(myAdapter);
+        }
+    }
 
 }

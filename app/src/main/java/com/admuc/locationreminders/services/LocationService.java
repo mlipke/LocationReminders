@@ -18,12 +18,15 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.admuc.locationreminders.models.AutomaticReminder;
+import com.admuc.locationreminders.models.GooglePlace;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
+import com.admuc.locationreminders.utils.GoogleParser;
 import com.admuc.locationreminders.utils.MapHelper;
 import com.admuc.locationreminders.utils.NotificationHelper;
 import com.admuc.locationreminders.utils.ReminderHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -67,7 +70,18 @@ public class LocationService extends Service implements LocationListener {
                 for (int i = 0; i < activeReminders.size(); i++) {
                     if (activeReminders.get(i) instanceof AutomaticReminder) {
                         if (lastLocation != null) {
-                            new GooglePlaces(MapHelper.convertLocation(lastLocation), ((AutomaticReminder) activeReminders.get(i)).getPoi(), LocationService.this, activeReminders.get(i)).execute();
+                            new GooglePlaces(MapHelper.convertLocation(lastLocation), activeReminders.get(i), new PlacesCallback() {
+                                @Override
+                                public void call(String response) {
+                                    ArrayList<GooglePlace> venuesList = GoogleParser.parse(response, MapHelper.convertLocation(lastLocation));
+                                    for (int i = 0; i < venuesList.size(); i++) {
+                                        if (venuesList.get(i).getDistance() < 0.2) {
+                                            NotificationHelper.createNotification(LocationService.this, null, venuesList.get(i).getDistance());
+                                            break;
+                                        }
+                                    }
+                                }
+                            }).execute();
                         }
                     } else {
                         if (lastLocation != null) {
