@@ -74,6 +74,9 @@ public class DetailActivity extends AppCompatActivity {
                 .findFragmentById(R.id.map);
         mMap = mapFragment.getMap();
         mMap.getUiSettings().setScrollGesturesEnabled(false);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.getUiSettings().setZoomGesturesEnabled(false);
+        
         mapFragment.getMapAsync(new MapListener());
 
         poiListView = (ListView) findViewById(R.id.listView);
@@ -99,20 +102,23 @@ public class DetailActivity extends AppCompatActivity {
         } else if (type.equals("AUTOMATIC")) {
             reminder = AutomaticReminder.findById(AutomaticReminder.class, _id);
 
-            mMap.setMyLocationEnabled(true);
-            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                @Override
-                public void onMyLocationChange(android.location.Location location) {
-                    double lat = location.getLatitude();
-                    double lng = location.getLongitude();
-                    LatLng ll = new LatLng(lat, lng);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
 
-                    Location loc = new Location(lat, lng);
-                    new GooglePlaces(loc, reminder, new Callback(loc)).execute();
-                }
-            });
         }
+
+
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
+            @Override
+            public void onMyLocationChange(android.location.Location location) {
+                double lat = location.getLatitude();
+                double lng = location.getLongitude();
+                LatLng ll = new LatLng(lat, lng);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+
+                Location loc = new Location(lat, lng);
+                new GooglePlaces(loc, reminder, new Callback(loc)).execute();
+            }
+        });
 
         _isCompleted = reminder.isCompleted();
 
@@ -238,8 +244,8 @@ public class DetailActivity extends AppCompatActivity {
                 listTitle.add(i,
                         venuesList.get(i).getName() +
                                 "\nOpen Now: " + venuesList.get(i).getOpenNow() +
-                                "\n(" + venuesList.get(i).getCategory() + ")" +
-                                "\n(" + venuesList.get(i).getDistance() + ")");
+                                //"\n(" + venuesList.get(i).getType() + ")" +
+                                "\nDistance: " + MapHelper.convertKmToMeter(venuesList.get(i).getDistance()) + " m");
             }
 
             // set the results to the list

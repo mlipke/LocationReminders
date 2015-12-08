@@ -25,6 +25,10 @@ public class MapHelper {
         return Radius * c;
     }
 
+    public static int convertKmToMeter(double distanceInKm) {
+        return (int) (distanceInKm*1000);
+    }
+
     public static Location convertLocation(android.location.Location location) {
         return new Location(location.getLatitude(), location.getLongitude());
     }
