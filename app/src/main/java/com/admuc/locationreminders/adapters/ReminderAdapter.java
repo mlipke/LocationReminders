@@ -16,6 +16,7 @@ import com.admuc.locationreminders.activities.DetailActivity;
 import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
+import com.admuc.locationreminders.utils.StringHelper;
 
 import java.util.List;
 
@@ -100,7 +101,7 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         }
 
         holder.title.setText(reminder.getTitle());
-        holder.locationString.setText(reminder.getLocationDescription());
+        holder.locationString.setText(StringHelper.convertToReadableString(reminder.getLocationDescription()));
     }
 
     @Override

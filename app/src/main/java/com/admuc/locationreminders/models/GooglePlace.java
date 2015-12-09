@@ -16,10 +16,7 @@ public class GooglePlace extends SugarRecord<GooglePlace> {
 
 
     public GooglePlace() {
-        this.name = "";
-        this.rating = "";
-        this.open = "";
-        this.setType("");
+
     }
 
     public void setName(String name) {
