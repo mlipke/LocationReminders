@@ -39,9 +39,9 @@ public class GoogleParser {
                         if (jsonArray.getJSONObject(i).has("opening_hours")) {
                             if (jsonArray.getJSONObject(i).getJSONObject("opening_hours").has("open_now")) {
                                 if (jsonArray.getJSONObject(i).getJSONObject("opening_hours").getString("open_now").equals("true")) {
-                                    poi.setOpenNow("YES");
+                                    poi.setOpenNow("Opened");
                                 } else {
-                                    poi.setOpenNow("NO");
+                                    poi.setOpenNow("Closed");
                                 }
                             }
                         } else {
@@ -51,7 +51,7 @@ public class GoogleParser {
                             JSONArray typesArray = jsonArray.getJSONObject(i).getJSONArray("types");
 
                             for (int j = 0; j < typesArray.length(); j++) {
-                                poi.setCategory(typesArray.getString(j) + ", " + poi.getCategory());
+                                poi.setType(typesArray.getString(j) + ", " + poi.getType());
                             }
                         }
                     }

@@ -1,18 +1,23 @@
 package com.admuc.locationreminders.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -76,7 +81,7 @@ public class DetailActivity extends AppCompatActivity {
         mMap.getUiSettings().setScrollGesturesEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setZoomGesturesEnabled(false);
-        
+
         mapFragment.getMapAsync(new MapListener());
 
         poiListView = (ListView) findViewById(R.id.listView);
@@ -248,10 +253,59 @@ public class DetailActivity extends AppCompatActivity {
                                 "\nDistance: " + MapHelper.convertKmToMeter(venuesList.get(i).getDistance()) + " m");
             }
 
+
+            GooglePlace g1 = new GooglePlace();
+            g1.setDistance(0.234);
+            g1.setName("test location");
+            g1.setOpenNow("Opened");
+            venuesList.add(g1);
+
             // set the results to the list
             // and show them in the xml
-            ArrayAdapter myAdapter = new ArrayAdapter(DetailActivity.this, android.R.layout.simple_list_item_1, listTitle);
+            GooglePlacesListViewAdapter myAdapter = new GooglePlacesListViewAdapter(DetailActivity.this, R.layout.googleplace_list_item_view, venuesList);
             poiListView.setAdapter(myAdapter);
+        }
+    }
+
+
+    public class GooglePlacesListViewAdapter extends ArrayAdapter<GooglePlace> {
+
+        Context context;
+
+        public GooglePlacesListViewAdapter(Context context, int resourceId,
+                                     List<GooglePlace> items) {
+            super(context, resourceId, items);
+            this.context = context;
+        }
+
+        /*private view holder class*/
+        private class ViewHolder {
+            ImageView imageView;
+            TextView txtTitle;
+            TextView txtDesc;
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder holder = null;
+            GooglePlace googlePlace = getItem(position);
+
+            LayoutInflater mInflater = (LayoutInflater) context
+                    .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+            if (convertView == null) {
+                convertView = mInflater.inflate(R.layout.googleplace_list_item_view, null);
+                holder = new ViewHolder();
+                holder.txtDesc = (TextView) convertView.findViewById(R.id.desc);
+                holder.txtTitle = (TextView) convertView.findViewById(R.id.title);
+                holder.imageView = (ImageView) convertView.findViewById(R.id.icon);
+                convertView.setTag(holder);
+            } else
+                holder = (ViewHolder) convertView.getTag();
+
+            holder.txtDesc.setText((int) googlePlace.getDistance() + " m | " + googlePlace.getOpenNow());
+            holder.txtTitle.setText(googlePlace.getName());
+            holder.imageView.setImageResource(R.drawable.ic_location_on_24dp);  // TODO: location type icon from URL
+
+            return convertView;
         }
     }
 
