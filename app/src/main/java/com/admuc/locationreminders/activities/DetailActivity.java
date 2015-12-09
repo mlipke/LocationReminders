@@ -252,13 +252,7 @@ public class DetailActivity extends AppCompatActivity {
                                 //"\n(" + venuesList.get(i).getType() + ")" +
                                 "\nDistance: " + MapHelper.convertKmToMeter(venuesList.get(i).getDistance()) + " m");
             }
-
-
-            GooglePlace g1 = new GooglePlace();
-            g1.setDistance(0.234);
-            g1.setName("test location");
-            g1.setOpenNow("Opened");
-            venuesList.add(g1);
+            
 
             // set the results to the list
             // and show them in the xml
@@ -301,7 +295,7 @@ public class DetailActivity extends AppCompatActivity {
             } else
                 holder = (ViewHolder) convertView.getTag();
 
-            holder.txtDesc.setText((int) googlePlace.getDistance() + " m | " + googlePlace.getOpenNow());
+            holder.txtDesc.setText((int) MapHelper.convertKmToMeter(googlePlace.getDistance()) + " m | " + googlePlace.getOpenNow());
             holder.txtTitle.setText(googlePlace.getName());
             holder.imageView.setImageResource(R.drawable.ic_location_on_24dp);  // TODO: location type icon from URL
 
