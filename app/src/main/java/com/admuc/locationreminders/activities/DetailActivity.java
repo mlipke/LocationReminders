@@ -81,6 +81,7 @@ public class DetailActivity extends AppCompatActivity {
         mMap.getUiSettings().setScrollGesturesEnabled(false);
         mMap.getUiSettings().setZoomControlsEnabled(false);
         mMap.getUiSettings().setZoomGesturesEnabled(false);
+        mMap.getUiSettings().setMyLocationButtonEnabled(false);
 
         mapFragment.getMapAsync(new MapListener());
 
