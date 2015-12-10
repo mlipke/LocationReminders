@@ -5,10 +5,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,8 +40,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +60,7 @@ public class DetailActivity extends AppCompatActivity {
     private GoogleMap mMap;
     private boolean _isCompleted;
     private ListView poiListView;
+    private boolean _isMyLocationDetected = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,13 +124,16 @@ public class DetailActivity extends AppCompatActivity {
         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(android.location.Location location) {
-                double lat = location.getLatitude();
-                double lng = location.getLongitude();
-                LatLng ll = new LatLng(lat, lng);
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+                if (!_isMyLocationDetected) {
+                    double lat = location.getLatitude();
+                    double lng = location.getLongitude();
+                    LatLng ll = new LatLng(lat, lng);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
 
-                Location loc = new Location(lat, lng);
-                new GooglePlaces(loc, reminder, new Callback(loc)).execute();
+                    Location loc = new Location(lat, lng);
+                    new GooglePlaces(loc, reminder, new Callback(loc)).execute();
+                    _isMyLocationDetected = true;
+                }
             }
         });
 
@@ -241,19 +252,12 @@ public class DetailActivity extends AppCompatActivity {
         @Override
         public void call(String response) {
             ArrayList<GooglePlace> venuesList = GoogleParser.parse(response, location);
-
-            List listTitle = new ArrayList();
-
             for (int i = 0; i < venuesList.size(); i++) {
-                // make a list of the venus that are loaded in the list.
-                // show the name, the category and the city
-                listTitle.add(i,
-                        venuesList.get(i).getName() +
-                                "\nOpen Now: " + venuesList.get(i).getOpenNow() +
-                                //"\n(" + venuesList.get(i).getType() + ")" +
-                                "\nDistance: " + MapHelper.convertKmToMeter(venuesList.get(i).getDistance()) + " m");
+                Log.d("Marker "+ i, venuesList.get(i).getLocation());
+                LatLng position = MapHelper.convertLatLng(venuesList.get(i).getLocation());
+                MarkerOptions options = new MarkerOptions().position(position);
+                mMap.addMarker(options);
             }
-            
 
             // set the results to the list
             // and show them in the xml
@@ -299,6 +303,20 @@ public class DetailActivity extends AppCompatActivity {
             holder.txtDesc.setText((int) MapHelper.convertKmToMeter(googlePlace.getDistance()) + " m | " + googlePlace.getOpenNow());
             holder.txtTitle.setText(googlePlace.getName());
             holder.imageView.setImageResource(R.drawable.ic_location_on_24dp);  // TODO: location type icon from URL
+
+            /*
+            try {
+                URL url = new URL(googlePlace.getIcon());
+                Log.d("Icon: ", googlePlace.getIcon());
+                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                holder.imageView.setImageBitmap(bmp);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            */
+
 
             return convertView;
         }

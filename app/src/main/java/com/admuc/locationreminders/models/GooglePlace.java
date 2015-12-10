@@ -1,6 +1,7 @@
 package com.admuc.locationreminders.models;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
 
 /**
  * Created by 4gray on 26.11.15.
@@ -9,15 +10,17 @@ public class GooglePlace extends SugarRecord<GooglePlace> {
     private String name;
     private String type;
     private String rating;
+
+    @Ignore
     private String open;
     private String icon;
+
+    @Ignore
     private double distance;
     private Location location;
 
 
-    public GooglePlace() {
-
-    }
+    public GooglePlace() {}
 
     public void setName(String name) {
         this.name = name;
