@@ -39,6 +39,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -248,15 +250,21 @@ public class DetailActivity extends AppCompatActivity {
             this.location = location;
         }
 
+        // method definition
+        public BitmapDescriptor getMarkerIcon(String color) {
+            float[] hsv = new float[3];
+            Color.colorToHSV(Color.parseColor(color), hsv);
+            return BitmapDescriptorFactory.defaultMarker(hsv[0]);
+        }
+
 
         @Override
         public void call(String response) {
             ArrayList<GooglePlace> venuesList = GoogleParser.parse(response, location);
             for (int i = 0; i < venuesList.size(); i++) {
-                Log.d("Marker "+ i, venuesList.get(i).getLocation());
                 LatLng position = MapHelper.convertLatLng(venuesList.get(i).getLocation());
-                MarkerOptions options = new MarkerOptions().position(position);
-                mMap.addMarker(options);
+                MarkerOptions options = new MarkerOptions().position(position).icon(getMarkerIcon("#03A9F4"));
+                mMap.addMarker(options).setTitle(venuesList.get(i).getName());
             }
 
             // set the results to the list
