@@ -20,7 +20,7 @@ public class NotificationHelper {
 
     public static void createNotification(Context context, Reminder reminder, double distance) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setContentTitle("Reminder")
+                .setContentTitle(reminder.getTitle())
                 .setSmallIcon(R.drawable.ic_location_on_24dp)
              //   .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
                 .setContentText(reminder.getLocationDescription() + ". Distance: "+ distance);

@@ -149,37 +149,4 @@ public class LocationService extends Service implements LocationListener {
 
     }
 
-
-    /*
-    protected synchronized void buildGoogleApiClient() {
-        Callback callback = new Callback();
-
-        Log.d("Service", "build google api!");
-
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(callback)
-                .addOnConnectionFailedListener(callback)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    private class Callback implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-
-        @Override
-        public void onConnected(Bundle bundle) {
-            lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-            Log.d("Last know location", Double.toString(lastLocation.getLatitude()) + Double.toString(lastLocation.getLongitude()));
-        }
-
-        @Override
-        public void onConnectionSuspended(int i) {
-
-        }
-
-        @Override
-        public void onConnectionFailed(ConnectionResult connectionResult) {
-
-        }
-    }
-    */
 }
