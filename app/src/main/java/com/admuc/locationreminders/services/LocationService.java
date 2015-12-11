@@ -76,7 +76,8 @@ public class LocationService extends Service implements LocationListener {
                                     ArrayList<GooglePlace> venuesList = GoogleParser.parse(response, MapHelper.convertLocation(lastLocation));
                                     for (int i = 0; i < venuesList.size(); i++) {
                                         if (venuesList.get(i).getDistance() < 0.2) {
-                                            NotificationHelper.createNotification(LocationService.this, null, venuesList.get(i).getDistance());
+                                            NotificationHelper.createNotification(LocationService.this,
+                                                    activeReminders.get(i), venuesList.get(i).getDistance());
                                             break;
                                         }
                                     }

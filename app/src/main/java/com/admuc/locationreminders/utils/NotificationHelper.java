@@ -22,8 +22,9 @@ public class NotificationHelper {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentTitle(reminder.getTitle())
                 .setSmallIcon(R.drawable.ic_location_on_24dp)
-             //   .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
-                .setContentText(reminder.getLocationDescription() + ". Distance: "+ distance);
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+                .setContentText(StringHelper.convertToReadableString(reminder.getLocationDescription())
+                        + " | " + MapHelper.convertKmToMeter(distance) + "m");
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -45,7 +46,7 @@ public class NotificationHelper {
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         builder.setContentIntent(intent);
-        manager.notify(12345689, builder.build());
+        manager.notify((int) (long) reminder.getId(), builder.build());
     }
 
 }

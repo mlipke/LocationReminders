@@ -25,6 +25,11 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
         timestamp = System.currentTimeMillis();
     }
 
+    @Override
+    public Long getId() {
+        return super.getId();
+    }
+
     public String getPoi() {
         return poi;
     }

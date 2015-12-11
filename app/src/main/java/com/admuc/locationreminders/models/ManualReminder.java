@@ -34,6 +34,11 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
     }
 
     @Override
+    public Long getId() {
+        return super.getId();
+    }
+
+    @Override
     public String getTitle() {
         return title;
     }
