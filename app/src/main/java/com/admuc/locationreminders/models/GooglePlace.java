@@ -19,8 +19,13 @@ public class GooglePlace extends SugarRecord<GooglePlace> {
     private double distance;
     private Location location;
 
-
     public GooglePlace() {}
+
+    @Override
+    public void save() {
+        location.save();
+        super.save();
+    }
 
     public void setName(String name) {
         this.name = name;
