@@ -22,7 +22,8 @@ public class NotificationHelper {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setContentTitle(reminder.getTitle())
                 .setSmallIcon(R.drawable.ic_location_on_24dp)
-                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+                .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE |
+                                Notification.DEFAULT_SOUND | Notification.FLAG_AUTO_CANCEL)
                 .setContentText(StringHelper.convertToReadableString(reminder.getLocationDescription())
                         + " | " + MapHelper.convertKmToMeter(distance) + "m");
 
