@@ -46,27 +46,34 @@ public class ManageActivity extends AppCompatActivity {
         final EditText title = (EditText) findViewById(R.id.title);
         final EditText note = (EditText) findViewById(R.id.note);
 
-        // get type and reminder id from intent; TODO: implement switch for edit mode
+
+        // get type and reminder id from intent;
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
 
-                String type = intent.getStringExtra("REMINDER_TYPE");
-                long id = intent.getLongExtra("REMINDER_ID", 0);
+            String type = intent.getStringExtra("REMINDER_TYPE");
+            long id = intent.getLongExtra("REMINDER_ID", 0);
 
-                if (type.equals("MANUAL")) {
-                    reminder = ManualReminder.findById(ManualReminder.class, id);
-                } else if (type.equals("AUTOMATIC")) {
-                    reminder = AutomaticReminder.findById(AutomaticReminder.class, id);
-                }
+            RadioButton automaticRadioBtn = (RadioButton) findViewById(R.id.radioButton);
+            RadioButton manualRadioBtn = (RadioButton) findViewById(R.id.radioButton2);
+
+            if (type.equals("MANUAL")) {
+                reminder = ManualReminder.findById(ManualReminder.class, id);
+            } else if (type.equals("AUTOMATIC")) {
+                reminder = AutomaticReminder.findById(AutomaticReminder.class, id);
+            }
 
 
-                // for debug
-                if (!reminder.getTitle().equals(""))
-                    title.setText(reminder.getTitle());
+            // for debug
+            if (!reminder.getTitle().equals(""))
+                title.setText(reminder.getTitle());
 
-                if (!reminder.getNote().equals(""))
-                    note.setText(reminder.getNote());
+            if (!reminder.getNote().equals(""))
+                note.setText(reminder.getNote());
+
+            automaticRadioBtn.setEnabled(false);
+            manualRadioBtn.setEnabled(false);
 
         }
 
@@ -100,6 +107,9 @@ public class ManageActivity extends AppCompatActivity {
                 Log.d("Title:", title.getText().toString());
                 if (title.getText().toString().equals("")) {
                     Snackbar.make(view, "Please add title", Snackbar.LENGTH_SHORT).show();
+                }
+                else if (poiTextView.getText().toString().equals("")) {
+                    Snackbar.make(view, "Please select POI", Snackbar.LENGTH_SHORT).show();
                 } else {
                     locationRadioValue = ((RadioButton) findViewById(locationRadioGroup.getCheckedRadioButtonId())).getText().toString();
                     Log.d("ReminderType:", locationRadioValue);
