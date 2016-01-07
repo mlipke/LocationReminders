@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +43,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
@@ -92,9 +94,6 @@ public class DetailActivity extends AppCompatActivity {
 
         setupViews();
 
-        //List listTitle = new ArrayList();
-        //ArrayAdapter myAdapter = new ArrayAdapter(DetailActivity.class, android.R.layout.simple_list_item_1, listTitle);
-
     }
 
     private void setupViews() {
@@ -107,10 +106,10 @@ public class DetailActivity extends AppCompatActivity {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
 
             Location location = ((ManualReminder) reminder).getLocation();
+
             new GooglePlaces(location, reminder, new Callback(location)).execute();
         } else if (type.equals("AUTOMATIC")) {
             reminder = AutomaticReminder.findById(AutomaticReminder.class, _id);
-
 
         }
 
@@ -119,6 +118,7 @@ public class DetailActivity extends AppCompatActivity {
         mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
             @Override
             public void onMyLocationChange(android.location.Location location) {
+
                 if (!_isMyLocationDetected) {
                     double lat = location.getLatitude();
                     double lng = location.getLongitude();
@@ -126,8 +126,21 @@ public class DetailActivity extends AppCompatActivity {
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
 
                     Location loc = new Location(lat, lng);
-                    new GooglePlaces(loc, reminder, new Callback(loc)).execute();
                     _isMyLocationDetected = true;
+
+                    // location caching for automatic reminders
+                    if (type.equals("AUTOMATIC")) {
+                        List<GooglePlace> poiList = checkForNearLocationsInCache(loc, reminder);
+
+                        if (poiList.size() != 0) {
+                            showCachedLocations(poiList);
+                            Log.d("Location caching ", "works");
+                        }
+                    }
+                    else {
+                        new GooglePlaces(loc, reminder, new Callback(loc)).execute();
+                    }
+
                 }
             }
         });
@@ -136,6 +149,62 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView titleView = (TextView) findViewById(R.id.titleView);
         titleView.setText(reminder.getTitle());
+    }
+
+    private List<GooglePlace> checkForNearLocationsInCache(Location location, Reminder reminder) {
+        List<GooglePlace> places = new ArrayList<>();
+        Location dbLocation;
+        String type;
+        String reminderType;
+        double distance;
+
+        // get saved locations near my location
+        // iterate over saved locations and check distance
+        // if distance < 0.2 save it to list
+        // if list is empty -> request google places api
+        //Iterator<GooglePlace> googlePlaceIterator = GooglePlace.findAll(GooglePlace.class);
+        //while (googlePlaceIterator.hasNext()) {
+        List<GooglePlace> googlePlacesList = GooglePlace.listAll(GooglePlace.class);
+        for (int i = 0; i < googlePlacesList.size(); i++) {
+            dbLocation = googlePlacesList.get(i).getLocation();
+            type = googlePlacesList.get(i).getType();
+
+            // check type of location - for automatic reminders
+            List<String> poiTypes = Arrays.asList(type.split("\\s*,\\s*"));
+            if (poiTypes.size() != 0) {
+                //Log.d("type check: ", googlePlacesList.get(i).getType());
+                for (int x = 0; x < poiTypes.size(); x++) {
+
+                    reminderType = ((AutomaticReminder)reminder).getPoi();
+                    if (poiTypes.get(x).equals(reminderType)) {
+
+                        distance = MapHelper.CalculationByDistance(dbLocation, location);
+                        if (distance <= 0.2) {
+                            //Log.d("match!", googlePlacesList.get(i).getName());
+                            googlePlacesList.get(i).setDistance(distance);
+                            googlePlacesList.get(i).setOpenNow("");
+                            places.add(googlePlacesList.get(i));
+                        }
+                    }
+                }
+            }
+        }
+
+        return places;
+    }
+
+    private void showCachedLocations(List<GooglePlace> cachedLocations) {
+        for (int i = 0; i < cachedLocations.size(); i++) {
+            LatLng position = MapHelper.convertLatLng(cachedLocations.get(i).getLocation());
+            MarkerOptions options = new MarkerOptions().position(position);
+            mMap.addMarker(options).setTitle(cachedLocations.get(i).getName());
+            Log.d("Fill list with: ", cachedLocations.get(i).getName());
+        }
+
+        // set the results to the list
+        // and show them in the xml
+        GooglePlacesListViewAdapter myAdapter = new GooglePlacesListViewAdapter(DetailActivity.this, R.layout.googleplace_list_item_view, cachedLocations);
+        poiListView.setAdapter(myAdapter);
     }
 
     @Override
