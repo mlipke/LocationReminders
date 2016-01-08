@@ -91,11 +91,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
 
         if (reminder instanceof ManualReminder) {
             holder.typeName = "MANUAL";
-            holder.id = ((ManualReminder) reminder).getId();
+            holder.id = reminder.getId();
             holder.circleIcon.setColorFilter(Color.GRAY);
         } else if (reminder instanceof AutomaticReminder) {
             holder.typeName = "AUTOMATIC";
-            holder.id = ((AutomaticReminder) reminder).getId();
+            holder.id = reminder.getId();
             holder.locationIcon.setImageResource(R.drawable.ic_store_24dp);
             holder.locationIcon.setColorFilter(Color.parseColor("#7f7f7f"));
         }
@@ -107,6 +107,11 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     @Override
     public int getItemCount() {
         return reminders.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return reminders.get(position).getId();
     }
 
     public void setReminders(List<Reminder> reminders) {

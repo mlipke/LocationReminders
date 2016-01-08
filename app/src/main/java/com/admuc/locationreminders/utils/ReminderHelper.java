@@ -44,7 +44,7 @@ public class ReminderHelper {
             reminders.add(manualReminderIterator.next());
         }
 
-        Collections.sort(reminders, new ReminderComparator());
+        //Collections.sort(reminders, new ReminderComparator());
 
         return reminders;
     }
