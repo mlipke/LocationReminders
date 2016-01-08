@@ -34,13 +34,13 @@
             android:defaultValue="200" />
 
 
-        <MultiSelectListPreference
+        <!--<MultiSelectListPreference
             android:dialogTitle="Select categories"
             android:key="pref_exclude"
             android:summary="Select categories to exclude"
             android:entries="@array/excludeEntries"
             android:entryValues="@array/excludeValues"
-            android:defaultValue="@array/empty_array"/>
+            android:defaultValue="@array/empty_array"/>-->
 
     </PreferenceCategory>
 </PreferenceScreen>
