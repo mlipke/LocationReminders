@@ -1,5 +1,7 @@
 package com.admuc.locationreminders.models;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 
 /**
@@ -19,16 +21,10 @@ public class ManualReminder extends SugarRecord<ManualReminder> implements Remin
     public ManualReminder() {
     }
 
-    public ManualReminder(String title, String note, Location location) {
-        this.title = title;
-        this.note = note;
-        this.location = location;
-
-        timestamp = System.currentTimeMillis();
-    }
-
     @Override
     public void save() {
+        timestamp = System.currentTimeMillis();
+        Log.d("TIME: ", String.valueOf(timestamp));
         location.save();
         super.save();
     }
