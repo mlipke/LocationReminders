@@ -59,7 +59,9 @@ public class LocationService extends Service implements LocationListener {
             Log.d("Location", "Forbidden");
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+
+        int radius = Integer.parseInt(preferences.getString("pref_radius", "200")) / 2;
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, radius, this);
     }
 
     @Override
