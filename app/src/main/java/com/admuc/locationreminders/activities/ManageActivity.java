@@ -105,17 +105,19 @@ public class ManageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Log.d("Title:", title.getText().toString());
+                locationRadioValue = ((RadioButton) findViewById(locationRadioGroup.getCheckedRadioButtonId())).getText().toString();
                 if (title.getText().toString().equals("")) {
                     Snackbar.make(view, "Please add title", Snackbar.LENGTH_SHORT).show();
                 }
-                else if (poiTextView.getText().toString().equals("")) {
+                else if (poiTextView.getText().toString().equals("") && locationRadioValue.equals("automatic")) {
                     Snackbar.make(view, "Please select POI", Snackbar.LENGTH_SHORT).show();
-                } else {
-                    locationRadioValue = ((RadioButton) findViewById(locationRadioGroup.getCheckedRadioButtonId())).getText().toString();
-                    Log.d("ReminderType:", locationRadioValue);
+                }
+                else if (selectedLocationDescription == null && locationRadioValue.equals("manual")) {
+                    Snackbar.make(view, "Please select location on the map", Snackbar.LENGTH_SHORT).show();
+                }
+                else {
 
                     String selectedPoi = poiTextView.getText().toString();
-                    Log.d("Selected POI: ", selectedPoi);
 
                     if (locationRadioValue.equals("automatic")) {
                         if (reminder == null)
