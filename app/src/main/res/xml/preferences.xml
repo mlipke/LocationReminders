@@ -25,5 +25,13 @@
             android:entryValues="@array/pref_sug"
             android:defaultValue="5" />
 
+        <ListPreference
+            android:key="pref_radius"
+            android:title="Radius in meter"
+            android:summary="%s"
+            android:entries="@array/poi_radius"
+            android:entryValues="@array/poi_radius"
+            android:defaultValue="200" />
+
     </PreferenceCategory>
 </PreferenceScreen>
