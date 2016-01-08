@@ -114,6 +114,14 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
         return reminders.get(position).getId();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (reminders.get(position) instanceof ManualReminder)
+            return 1;
+        else
+            return 2;
+    }
+
     public void setReminders(List<Reminder> reminders) {
         this.reminders = reminders;
     }

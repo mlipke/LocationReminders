@@ -37,6 +37,7 @@ public class ActiveRemindersFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_active_reminders, container, false);
 
         adapter = new ReminderAdapter(ReminderHelper.getActiveReminders(), getContext());
+        adapter.setHasStableIds(true);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setAdapter(adapter);
