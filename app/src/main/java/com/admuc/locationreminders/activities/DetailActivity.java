@@ -196,7 +196,8 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 
-        return places;
+        int limit = Integer.parseInt(preferences.getString("pref_suggestions", "5"));
+        return places.subList(0, limit);
     }
 
     private void showCachedLocations(List<GooglePlace> cachedLocations) {
