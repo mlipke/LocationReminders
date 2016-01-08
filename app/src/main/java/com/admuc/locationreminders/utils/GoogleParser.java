@@ -12,7 +12,7 @@ import java.util.List;
 
 public class GoogleParser {
 
-    public static ArrayList<GooglePlace> parse(String response, Location location) {
+    public static List<GooglePlace> parse(String response, Location location, int limit) {
 
         ArrayList<GooglePlace> temp = new ArrayList<>();
         try {
@@ -71,9 +71,13 @@ public class GoogleParser {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return new ArrayList();
+            return new ArrayList<>();
         }
 
-        return temp;
+        if (limit > temp.size()) {
+            return temp;
+        } else {
+            return temp.subList(0, limit);
+        }
     }
 }

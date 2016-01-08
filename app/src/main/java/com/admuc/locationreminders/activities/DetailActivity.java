@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -59,6 +61,8 @@ public class DetailActivity extends AppCompatActivity {
     private ListView poiListView;
     private boolean _isMyLocationDetected = false;
 
+    private SharedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +73,8 @@ public class DetailActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Intent intent = getIntent();
         type = intent.getStringExtra("REMINDER_TYPE");
@@ -322,7 +328,8 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         public void call(String response) {
-            ArrayList<GooglePlace> venuesList = GoogleParser.parse(response, location);
+            int limit = Integer.parseInt(preferences.getString("pref_suggestions", "5"));
+            List<GooglePlace> venuesList = GoogleParser.parse(response, location, limit);
             for (int i = 0; i < venuesList.size(); i++) {
                 LatLng position = MapHelper.convertLatLng(venuesList.get(i).getLocation());
                 MarkerOptions options = new MarkerOptions().position(position).icon(getMarkerIcon("#03A9F4"));

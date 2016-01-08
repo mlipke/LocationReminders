@@ -41,14 +41,18 @@ public class LocationService extends Service implements LocationListener {
     private List<Reminder> activeReminders;
     private LocationManager locationManager;
 
-    public LocationService() {
-    }
+    private SharedPreferences preferences;
+
+    public LocationService() {}
 
     @Override
     public void onCreate() {
         HandlerThread thread = new HandlerThread("ServiceStartArguments",
                 Process.THREAD_PRIORITY_BACKGROUND);
+
         thread.start();
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -73,7 +77,8 @@ public class LocationService extends Service implements LocationListener {
                             new GooglePlaces(MapHelper.convertLocation(lastLocation), activeReminders.get(i), new PlacesCallback() {
                                 @Override
                                 public void call(String response) {
-                                    ArrayList<GooglePlace> venuesList = GoogleParser.parse(response, MapHelper.convertLocation(lastLocation));
+                                    int limit = Integer.parseInt(preferences.getString("pref_suggestions", "10"));
+                                    List<GooglePlace> venuesList = GoogleParser.parse(response, MapHelper.convertLocation(lastLocation), limit);
                                     for (int i = 0; i < venuesList.size(); i++) {
                                         if (venuesList.get(i).getDistance() < 0.2) {
                                             NotificationHelper.createNotification(LocationService.this,
@@ -101,8 +106,6 @@ public class LocationService extends Service implements LocationListener {
             }
         };
 
-
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String rate = preferences.getString("pref_frequency", "pref_not_set");
         Log.d("Rate", rate);
 
