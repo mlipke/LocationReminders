@@ -1,5 +1,7 @@
 package com.admuc.locationreminders.models;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 
 /**
@@ -17,12 +19,11 @@ public class AutomaticReminder extends SugarRecord<AutomaticReminder> implements
 
     public AutomaticReminder() {}
 
-    public AutomaticReminder(String title, String note, String poi) {
-        this.title = title;
-        this.note = note;
-        this.poi = poi;
-
+    @Override
+    public void save() {
         timestamp = System.currentTimeMillis();
+        Log.d("TIME: ", String.valueOf(timestamp));
+        super.save();
     }
 
     @Override
