@@ -38,4 +38,20 @@
         <item>1000</item>
     </string-array>
 
+
+    <string-array name="excludeEntries">
+        <item>sublocality</item>
+        <item>sublocality_level_2</item>
+        <item>political</item>
+    </string-array>
+
+    <string-array name="excludeValues">
+        <item>Sublocality</item>
+        <item>Sublocality Level 2</item>
+        <item>Political</item>
+    </string-array>
+
+    <string-array name="empty_array">
+    </string-array>
+
 </resources>
