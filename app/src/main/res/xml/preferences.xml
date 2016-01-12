@@ -33,6 +33,11 @@
             android:entryValues="@array/poi_radius"
             android:defaultValue="200" />
 
+        <CheckBoxPreference
+            android:key="pref_manual_control"
+            android:title="Manual Service Control"
+            android:summary="Control the location service manually"
+            android:defaultValue="false" />
 
         <!--<MultiSelectListPreference
             android:dialogTitle="Select categories"
