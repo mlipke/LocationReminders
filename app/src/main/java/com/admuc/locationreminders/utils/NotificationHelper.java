@@ -29,6 +29,7 @@ public class NotificationHelper {
                         Notification.DEFAULT_SOUND)
                 .setContentText(StringHelper.convertToReadableString(reminder.getLocationDescription())
                         + " | " + MapHelper.convertKmToMeter(distance) + "m");
+
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent notificationIntent = new Intent(context, DetailActivity.class);
@@ -42,10 +43,10 @@ public class NotificationHelper {
             notificationIntent.putExtra("REMINDER_TYPE", "MANUAL");
         }
 
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        //notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                //| Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        PendingIntent intent = PendingIntent.getActivity(context, 0,
+        PendingIntent intent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(),
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent completedIntent = new Intent(context, CompletedListener.class);
@@ -56,12 +57,13 @@ public class NotificationHelper {
         else {
             completedIntent.putExtra("REMINDER_TYPE", "AUTOMATIC");
         }
-        PendingIntent completedPendingIntent = PendingIntent.getBroadcast(context, 0, completedIntent, Intent.FILL_IN_DATA);
+        PendingIntent completedPendingIntent = PendingIntent.getBroadcast(context, (int) System.currentTimeMillis(), completedIntent, Intent.FILL_IN_DATA);
 
         builder.addAction(R.drawable.ic_done_24dp, "Completed", completedPendingIntent);
 
         builder.setContentIntent(intent);
         manager.notify((int) (long) reminder.getId(), builder.build());
+        Log.d("NotificationCast", Integer.toHexString((int)(long)reminder.getId()));
     }
 
     public static class CompletedListener extends BroadcastReceiver {
