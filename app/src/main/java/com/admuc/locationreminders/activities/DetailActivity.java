@@ -193,7 +193,7 @@ public class DetailActivity extends AppCompatActivity {
                     if (poiTypes.get(x).equals(reminderType)) {
 
                         distance = MapHelper.CalculationByDistance(dbLocation, location);
-                        if (distance <= (_radius/1000)) {
+                        if (distance <= (_radius/1000.0)) {
                             //Log.d("match!", googlePlacesList.get(i).getName());
                             googlePlacesList.get(i).setDistance(distance);
                             googlePlacesList.get(i).setOpenNow("");

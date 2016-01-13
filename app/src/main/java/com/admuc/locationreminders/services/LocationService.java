@@ -83,7 +83,7 @@ public class LocationService extends Service implements LocationListener {
                                     int limit = Integer.parseInt(preferences.getString("pref_suggestions", "10"));
                                     List<GooglePlace> venuesList = GoogleParser.parse(response, MapHelper.convertLocation(lastLocation), limit);
                                     for (int i = 0; i < venuesList.size(); i++) {
-                                        if (venuesList.get(i).getDistance() < (radius/1000)) {
+                                        if (venuesList.get(i).getDistance() < (radius/1000.0)) {
                                             NotificationHelper.createNotification(LocationService.this,
                                                     activeReminders.get(i), venuesList.get(i).getDistance());
                                             break;
@@ -98,7 +98,8 @@ public class LocationService extends Service implements LocationListener {
                             double distance = MapHelper.CalculationByDistance(r.getLocation(),
                                     MapHelper.convertLocation(lastLocation));
                             Log.d("distance: ", String.valueOf(distance));
-                            if (distance < (radius/1000)) {
+                            if (distance < (radius/1000.0)) {
+                                Log.d("LocationService: ", "send notification");
                                 NotificationHelper.createNotification(LocationService.this, activeReminders.get(i), distance);
                             }
                         }
