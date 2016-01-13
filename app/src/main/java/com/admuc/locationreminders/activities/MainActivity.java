@@ -9,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,6 +87,15 @@ public class MainActivity extends AppCompatActivity {
             completedRemindersFragment.notifyDataSetChanged();
 
         invalidateOptionsMenu();
+        Log.d("Resume", "Resumend");
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (activeRemindersFragment != null)
+            activeRemindersFragment.notifyDataSetChanged();
+        if (completedRemindersFragment != null)
+            completedRemindersFragment.notifyDataSetChanged();
     }
 
     @Override

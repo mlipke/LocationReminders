@@ -70,13 +70,11 @@ public class NotificationHelper {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Receiver", "Received");
-
             long id = intent.getLongExtra("REMINDER_ID", 0);
             String type = intent.getStringExtra("REMINDER_TYPE");
 
-            Log.d("Receiver", Long.toString(id));
-            Log.d("Receiver", type);
+            NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancel((int)id);
 
             if (type != null) {
                 if (type.equals("MANUAL")) {
