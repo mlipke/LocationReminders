@@ -60,6 +60,8 @@ public class DetailActivity extends AppCompatActivity {
     private boolean _isCompleted;
     private ListView poiListView;
     private boolean _isMyLocationDetected = false;
+    private int _poiLimit;
+    private int _radius;
 
     private SharedPreferences preferences;
 
@@ -75,6 +77,8 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        _poiLimit = Integer.parseInt(preferences.getString("pref_suggestions", "5"));
+        _radius = Integer.parseInt(preferences.getString("pref_radius", "200"));
 
         Intent intent = getIntent();
         type = intent.getStringExtra("REMINDER_TYPE");
@@ -113,7 +117,7 @@ public class DetailActivity extends AppCompatActivity {
 
             Location location = ((ManualReminder) reminder).getLocation();
 
-            new GooglePlaces(location, reminder, new Callback(location)).execute();
+            new GooglePlaces(location, reminder, new Callback(location), getApplicationContext()).execute();
         } else if (type.equals("AUTOMATIC")) {
             reminder = AutomaticReminder.findById(AutomaticReminder.class, _id);
 
@@ -142,9 +146,12 @@ public class DetailActivity extends AppCompatActivity {
                             showCachedLocations(poiList);
                             Log.d("Location caching ", "works");
                         }
+                        else {
+                            new GooglePlaces(loc, reminder, new Callback(loc), getApplicationContext()).execute();
+                        }
                     }
                     else {
-                        new GooglePlaces(loc, reminder, new Callback(loc)).execute();
+                        new GooglePlaces(loc, reminder, new Callback(loc), getApplicationContext()).execute();
                     }
 
                 }
@@ -174,6 +181,7 @@ public class DetailActivity extends AppCompatActivity {
         for (int i = 0; i < googlePlacesList.size(); i++) {
             dbLocation = googlePlacesList.get(i).getLocation();
             type = googlePlacesList.get(i).getType();
+            Log.d("Caching: ", "try to get pois from cache");
 
             // check type of location - for automatic reminders
             List<String> poiTypes = Arrays.asList(type.split("\\s*,\\s*"));
@@ -185,7 +193,7 @@ public class DetailActivity extends AppCompatActivity {
                     if (poiTypes.get(x).equals(reminderType)) {
 
                         distance = MapHelper.CalculationByDistance(dbLocation, location);
-                        if (distance <= 0.2) {
+                        if (distance <= (_radius/1000)) {
                             //Log.d("match!", googlePlacesList.get(i).getName());
                             googlePlacesList.get(i).setDistance(distance);
                             googlePlacesList.get(i).setOpenNow("");
@@ -196,11 +204,22 @@ public class DetailActivity extends AppCompatActivity {
             }
         }
 
-        int limit = Integer.parseInt(preferences.getString("pref_suggestions", "5"));
-        if (limit > places.size()) {
+        // if number of locations from cache < suggestion limit from preferences
+        if (places.size() < _poiLimit) {
+            places.clear();
+            Log.d("Caching: ", "clear places");
+        }
+        else {
+            places = limitList(places);
+        }
+        return places;
+    }
+
+    private List<GooglePlace> limitList(List places) {
+        if (_poiLimit > places.size()) {
             return places;
         } else {
-            return places.subList(0, limit);
+            return places.subList(0, _poiLimit);
         }
     }
 
@@ -333,8 +352,7 @@ public class DetailActivity extends AppCompatActivity {
 
         @Override
         public void call(String response) {
-            int limit = Integer.parseInt(preferences.getString("pref_suggestions", "5"));
-            List<GooglePlace> venuesList = GoogleParser.parse(response, location, limit);
+            List<GooglePlace> venuesList = GoogleParser.parse(response, location, _poiLimit);
             for (int i = 0; i < venuesList.size(); i++) {
                 LatLng position = MapHelper.convertLatLng(venuesList.get(i).getLocation());
                 MarkerOptions options = new MarkerOptions().position(position).icon(getMarkerIcon("#03A9F4"));

@@ -42,6 +42,7 @@ public class LocationService extends Service implements LocationListener {
     private LocationManager locationManager;
 
     private SharedPreferences preferences;
+    private int radius;
 
     public LocationService() {}
 
@@ -53,6 +54,7 @@ public class LocationService extends Service implements LocationListener {
         thread.start();
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        radius = Integer.parseInt(preferences.getString("pref_radius", "200"));
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -60,7 +62,6 @@ public class LocationService extends Service implements LocationListener {
             return;
         }
 
-        int radius = Integer.parseInt(preferences.getString("pref_radius", "200")) / 2;
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, radius, this);
     }
 
@@ -82,14 +83,14 @@ public class LocationService extends Service implements LocationListener {
                                     int limit = Integer.parseInt(preferences.getString("pref_suggestions", "10"));
                                     List<GooglePlace> venuesList = GoogleParser.parse(response, MapHelper.convertLocation(lastLocation), limit);
                                     for (int i = 0; i < venuesList.size(); i++) {
-                                        if (venuesList.get(i).getDistance() < 0.2) {
+                                        if (venuesList.get(i).getDistance() < (radius/1000)) {
                                             NotificationHelper.createNotification(LocationService.this,
                                                     activeReminders.get(i), venuesList.get(i).getDistance());
                                             break;
                                         }
                                     }
                                 }
-                            }).execute();
+                            }, getApplicationContext()).execute();
                         }
                     } else {
                         if (lastLocation != null) {
@@ -97,7 +98,7 @@ public class LocationService extends Service implements LocationListener {
                             double distance = MapHelper.CalculationByDistance(r.getLocation(),
                                     MapHelper.convertLocation(lastLocation));
                             Log.d("distance: ", String.valueOf(distance));
-                            if (distance < 0.2) {
+                            if (distance < (radius/1000)) {
                                 NotificationHelper.createNotification(LocationService.this, activeReminders.get(i), distance);
                             }
                         }

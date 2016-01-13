@@ -3,7 +3,9 @@ package com.admuc.locationreminders.services;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -46,10 +48,15 @@ public class GooglePlaces extends AsyncTask<Void, Void, Void> {
     private ArrayAdapter myAdapter;
     private Location location;
     private Context context;
+    private SharedPreferences preferences;
+    private int radius;
 
-    public GooglePlaces(Location location, Reminder reminder, PlacesCallback callback) {
+    public GooglePlaces(Location location, Reminder reminder, PlacesCallback callback, Context context) {
         this.location = location;
         this.callback = callback;
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        radius = Integer.parseInt(preferences.getString("pref_radius", "200"));
 
         if (reminder instanceof AutomaticReminder) {
             this.type = ((AutomaticReminder) reminder).getPoi();
@@ -60,18 +67,19 @@ public class GooglePlaces extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void[] params) {
+
         // make Call to the url
         //temp = makeCall("https://maps.googleapis.com/maps/api/place/search/json?location=" + locationLat + "," + locationLon + "&types=" + type + "&radius=200&sensor=true&key=" + BuildConfig.PLACES_WEB_SERVICE_API);
         temp = makeCall(PlacesAPIRequestBuilder.build(location)
                 .setType(type)
-                .setRadius(200)
+                .setRadius(radius)
                 .setKey(BuildConfig.PLACES_WEB_SERVICE_API)
                 .get());
 
         //print the call in the console
         System.out.println(PlacesAPIRequestBuilder.build(location)
                 .setType(type)
-                .setRadius(200)
+                .setRadius(radius)
                 .setKey(BuildConfig.PLACES_WEB_SERVICE_API)
                 .get());
 

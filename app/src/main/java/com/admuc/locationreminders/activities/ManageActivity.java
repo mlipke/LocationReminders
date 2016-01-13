@@ -45,6 +45,8 @@ public class ManageActivity extends AppCompatActivity {
         // get fields and values
         final EditText title = (EditText) findViewById(R.id.title);
         final EditText note = (EditText) findViewById(R.id.note);
+        final AutoCompleteTextView poiTextView = (AutoCompleteTextView)
+                findViewById(R.id.poiTextView);
 
 
         // get type and reminder id from intent;
@@ -62,6 +64,7 @@ public class ManageActivity extends AppCompatActivity {
                 reminder = ManualReminder.findById(ManualReminder.class, id);
             } else if (type.equals("AUTOMATIC")) {
                 reminder = AutomaticReminder.findById(AutomaticReminder.class, id);
+                poiTextView.setText(reminder.getLocationDescription());
             }
 
 
@@ -81,8 +84,7 @@ public class ManageActivity extends AppCompatActivity {
 
         ArrayAdapter<String> poiAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line, arraySpinner);
-        final AutoCompleteTextView poiTextView = (AutoCompleteTextView)
-                findViewById(R.id.poiTextView);
+
         poiTextView.setAdapter(poiAdapter);
 
 
