@@ -2,7 +2,6 @@ package com.admuc.locationreminders.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -37,6 +36,7 @@ import com.admuc.locationreminders.models.Reminder;
 import com.admuc.locationreminders.services.GooglePlaces;
 import com.admuc.locationreminders.services.PlacesCallback;
 import com.admuc.locationreminders.utils.GoogleParser;
+import com.admuc.locationreminders.utils.GooglePlaceComparator;
 import com.admuc.locationreminders.utils.MapHelper;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,6 +49,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
@@ -67,6 +69,8 @@ public class DetailActivity extends AppCompatActivity {
     private int _radius;
     private ProgressBar _loadingIndicator;
     private LinearLayout preloaderBackground;
+    private android.location.Location _startLocation = null;
+    private double locationDistance;
 
     private SharedPreferences preferences;
 
@@ -141,37 +145,21 @@ public class DetailActivity extends AppCompatActivity {
             public void onMyLocationChange(android.location.Location location) {
 
                 if (!_isMyLocationDetected) {
-                    double lat = location.getLatitude();
-                    double lng = location.getLongitude();
-                    LatLng ll = new LatLng(lat, lng);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
-
-                    Location loc = new Location(lat, lng);
-                    _isMyLocationDetected = true;
-
-                    // location caching for automatic reminders
-                    if (type.equals("AUTOMATIC")) {
-                        List<GooglePlace> poiList = checkForNearLocationsInCache(loc, reminder);
-
-                        if (poiList.size() != 0) {
-                            showCachedLocations(poiList);
-                            Log.d("Location caching ", "works");
-                            _loadingIndicator.setVisibility(View.INVISIBLE);
-                            preloaderBackground.setVisibility(View.INVISIBLE);
-                        }
-                        else {
-                            new GooglePlaces(loc, reminder, new Callback(loc), getApplicationContext()).execute();
-                            _loadingIndicator.setVisibility(View.INVISIBLE);
-                            preloaderBackground.setVisibility(View.INVISIBLE);
-                        }
-                    }
-                    else {
-                        new GooglePlaces(loc, reminder, new Callback(loc), getApplicationContext()).execute();
-                        _loadingIndicator.setVisibility(View.INVISIBLE);
-                        preloaderBackground.setVisibility(View.INVISIBLE);
-                    }
-
+                    _startLocation = location;
+                    getAndShowPois(location);
                 }
+
+                // distance between first location, which was detected on activity start and actual location (for live/dynamic map)
+                locationDistance = MapHelper.CalculationByDistance(
+                        MapHelper.convertLocation(_startLocation),
+                        MapHelper.convertLocation(location));
+                Log.d("Distance: ", String.valueOf(locationDistance));
+
+                if (locationDistance > _radius) {
+                    Log.d("Map update ", "");
+                    getAndShowPois(location);
+                }
+
             }
         });
 
@@ -179,6 +167,40 @@ public class DetailActivity extends AppCompatActivity {
 
         TextView titleView = (TextView) findViewById(R.id.titleView);
         titleView.setText(reminder.getTitle());
+    }
+
+
+    public void getAndShowPois(android.location.Location location) {
+
+        double lat = location.getLatitude();
+        double lng = location.getLongitude();
+        LatLng ll = new LatLng(lat, lng);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ll, 15));
+
+        Location loc = new Location(lat, lng);
+        _isMyLocationDetected = true;
+
+        // location caching for automatic reminders
+        if (type.equals("AUTOMATIC")) {
+            List<GooglePlace> poiList = checkForNearLocationsInCache(loc, reminder);
+
+            if (poiList.size() != 0) {
+                showCachedLocations(poiList);
+                Log.d("Location caching ", "works");
+                _loadingIndicator.setVisibility(View.INVISIBLE);
+                preloaderBackground.setVisibility(View.INVISIBLE);
+            }
+            else {
+                new GooglePlaces(loc, reminder, new Callback(loc), getApplicationContext()).execute();
+                _loadingIndicator.setVisibility(View.INVISIBLE);
+                preloaderBackground.setVisibility(View.INVISIBLE);
+            }
+        }
+        else {
+            new GooglePlaces(loc, reminder, new Callback(loc), getApplicationContext()).execute();
+            _loadingIndicator.setVisibility(View.INVISIBLE);
+            preloaderBackground.setVisibility(View.INVISIBLE);
+        }
     }
 
     private List<GooglePlace> checkForNearLocationsInCache(Location location, Reminder reminder) {
@@ -378,6 +400,7 @@ public class DetailActivity extends AppCompatActivity {
 
             // set the results to the list
             // and show them in the xml
+            Collections.sort(venuesList, new GooglePlaceComparator());
             GooglePlacesListViewAdapter myAdapter = new GooglePlacesListViewAdapter(DetailActivity.this, R.layout.googleplace_list_item_view, venuesList);
             poiListView.setAdapter(myAdapter);
 
@@ -428,3 +451,5 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 }
+
+
