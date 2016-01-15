@@ -423,20 +423,6 @@ public class DetailActivity extends AppCompatActivity {
             holder.txtTitle.setText(googlePlace.getName());
             holder.imageView.setImageResource(R.drawable.ic_location_on_24dp);  // TODO: location type icon from URL
 
-            /*
-            try {
-                URL url = new URL(googlePlace.getIcon());
-                Log.d("Icon: ", googlePlace.getIcon());
-                Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-                holder.imageView.setImageBitmap(bmp);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            */
-
-
             return convertView;
         }
     }
