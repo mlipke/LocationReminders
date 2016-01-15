@@ -33,15 +33,13 @@ public class ReminderAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.reminder_list_item_view, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view, new ViewHolder.ImyViewHolderClicks() {
+        ViewHolder viewHolder = new ViewHolder(view, new ViewHolder.ViewHolderClickListener() {
             @Override
             public void onReminder(long id, String type) {
-
                 Intent intent = new Intent(context, DetailActivity.class);
                 intent.putExtra("REMINDER_TYPE", type);
                 intent.putExtra("REMINDER_ID", id);
                 context.startActivity(intent);
-
             }
         });
 

@@ -20,10 +20,10 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
 
     public ImageView type;
     public ImageView locationIcon;
-    public ImyViewHolderClicks clickListener;
+    public ViewHolderClickListener clickListener;
     public ImageView circleIcon;
 
-    public ViewHolder(View itemView, ImyViewHolderClicks clickListener) {
+    public ViewHolder(View itemView, ViewHolderClickListener clickListener) {
         super(itemView);
         this.clickListener = clickListener;
         this.title = (TextView) itemView.findViewById(R.id.title);
@@ -37,9 +37,5 @@ public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickL
     @Override
     public void onClick(View v) {
         clickListener.onReminder(this.id, this.typeName);
-    }
-
-    public interface ImyViewHolderClicks {
-        void onReminder(long id, String type);
     }
 }
