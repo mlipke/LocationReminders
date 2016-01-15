@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,13 +17,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.admuc.locationreminders.LocationReminders;
 import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.adapters.ViewPagerAdapter;
 import com.admuc.locationreminders.fragments.ActiveRemindersFragment;
 import com.admuc.locationreminders.fragments.CompletedRemindersFragment;
+import com.admuc.locationreminders.models.AutomaticReminder;
+import com.admuc.locationreminders.models.Location;
+import com.admuc.locationreminders.models.ManualReminder;
+import com.admuc.locationreminders.models.Reminder;
 import com.admuc.locationreminders.services.LocationService;
 
 public class MainActivity extends AppCompatActivity {
+
+    private LocationReminders application;
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
@@ -30,12 +38,16 @@ public class MainActivity extends AppCompatActivity {
     private ActiveRemindersFragment activeRemindersFragment;
     private CompletedRemindersFragment completedRemindersFragment;
 
+    private FloatingActionButton fab;
+
     private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        application = (LocationReminders) getApplication();
 
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -67,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,21 +93,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        if (activeRemindersFragment != null)
-            activeRemindersFragment.notifyDataSetChanged();
-        if (completedRemindersFragment != null)
-            completedRemindersFragment.notifyDataSetChanged();
+        refresh();
+
+        if (application != null && application.shouldShowUndo())
+            showUndoSnackBar();
 
         invalidateOptionsMenu();
-        Log.d("Resume", "Resumend");
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        if (activeRemindersFragment != null)
-            activeRemindersFragment.notifyDataSetChanged();
-        if (completedRemindersFragment != null)
-            completedRemindersFragment.notifyDataSetChanged();
+        refresh();
     }
 
     @Override
@@ -161,6 +169,36 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment("COMPLETED", completedRemindersFragment);
 
         viewPager.setAdapter(adapter);
+    }
+
+    private void showUndoSnackBar() {
+        final Reminder deletedReminder = application.getReminder();
+
+        Snackbar.make(fab, "Deleted " + deletedReminder.getTitle(), Snackbar.LENGTH_LONG)
+                .setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (deletedReminder instanceof ManualReminder) {
+                            ((ManualReminder) deletedReminder).setId(null);
+                            ((ManualReminder) deletedReminder).save();
+                        } else {
+                            ((AutomaticReminder) deletedReminder).setId(null);
+                            ((AutomaticReminder) deletedReminder).save();
+                        }
+
+                        refresh();
+                    }
+                }).show();
+
+        application.setShowUndo(false);
+        application.setReminder(null);
+    }
+
+    private void refresh() {
+        if (activeRemindersFragment != null)
+            activeRemindersFragment.notifyDataSetChanged();
+        if (completedRemindersFragment != null)
+            completedRemindersFragment.notifyDataSetChanged();
     }
 
 }

@@ -2,6 +2,8 @@ package com.admuc.locationreminders.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.admuc.locationreminders.LocationReminders;
 import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.models.AutomaticReminder;
 import com.admuc.locationreminders.models.GooglePlace;
@@ -314,39 +317,21 @@ public class DetailActivity extends AppCompatActivity {
 
             return true;
         } else if (id == R.id.action_remove) {
+            LocationReminders application = (LocationReminders) getApplication();
 
-            // show remove confirmation dialog
-            AlertDialog.Builder alert = new AlertDialog.Builder(DetailActivity.this);
-            alert.setTitle("Alert!!");
-            alert.setMessage("Are you sure to delete this reminder?");
-            alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            if (type.equals("MANUAL")) {
+                ManualReminder mReminder = ManualReminder.findById(ManualReminder.class, _id);
+                application.setReminder(mReminder);
+                mReminder.delete();
+            } else if (type.equals("AUTOMATIC")) {
+                AutomaticReminder aReminder = AutomaticReminder.findById(AutomaticReminder.class, _id);
+                application.setReminder(aReminder);
+                aReminder.delete();
+            }
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+            application.setShowUndo(true);
 
-                    if (type.equals("MANUAL")) {
-                        ManualReminder mReminder = ManualReminder.findById(ManualReminder.class, _id);
-                        mReminder.delete();
-                    } else if (type.equals("AUTOMATIC")) {
-                        AutomaticReminder aReminder = AutomaticReminder.findById(AutomaticReminder.class, _id);
-                        aReminder.delete();
-                    }
-
-                    finish();
-
-                    Toast.makeText(getApplicationContext(), "Reminder was deleted", Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                }
-            });
-
-            alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            alert.show();
+            finish();
 
             return true;
         } else if (id == R.id.action_complete) {
@@ -442,7 +427,7 @@ public class DetailActivity extends AppCompatActivity {
             } else
                 holder = (ViewHolder) convertView.getTag();
 
-            holder.txtDesc.setText((int) MapHelper.convertKmToMeter(googlePlace.getDistance()) + " m | " + googlePlace.getOpenNow());
+            holder.txtDesc.setText(MapHelper.convertKmToMeter(googlePlace.getDistance()) + " m | " + googlePlace.getOpenNow());
             holder.txtTitle.setText(googlePlace.getName());
             holder.imageView.setImageResource(R.drawable.ic_location_on_24dp);  // TODO: location type icon from URL
 
