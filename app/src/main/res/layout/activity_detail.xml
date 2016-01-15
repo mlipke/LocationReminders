@@ -28,6 +28,23 @@
 
     <include layout="@layout/content_detail" />
 
+
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#cc848484"
+        android:id="@+id/preloaderBackground"
+        android:gravity="center">
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/preloader"
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_in"
+            android:indeterminateTint="#cccccc"
+            style="?android:attr/progressBarStyleLarge"/>
+    </LinearLayout>
+
     <ListView
         android:layout_marginTop="340dp"
         android:id="@+id/listView"

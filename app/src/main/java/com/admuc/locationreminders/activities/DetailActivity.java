@@ -2,6 +2,7 @@ package com.admuc.locationreminders.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -21,7 +22,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,6 +65,8 @@ public class DetailActivity extends AppCompatActivity {
     private boolean _isMyLocationDetected = false;
     private int _poiLimit;
     private int _radius;
+    private ProgressBar _loadingIndicator;
+    private LinearLayout preloaderBackground;
 
     private SharedPreferences preferences;
 
@@ -73,8 +78,13 @@ public class DetailActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+         preloaderBackground = (LinearLayout) findViewById(R.id.preloaderBackground);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        _loadingIndicator = (ProgressBar) findViewById(R.id.preloader);
+        _loadingIndicator.setVisibility(View.VISIBLE);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         _poiLimit = Integer.parseInt(preferences.getString("pref_suggestions", "5"));
@@ -97,6 +107,7 @@ public class DetailActivity extends AppCompatActivity {
         //mMap.getUiSettings().setZoomControlsEnabled(false);
         //mMap.getUiSettings().setZoomGesturesEnabled(false);
         mMap.getUiSettings().setMyLocationButtonEnabled(false);
+
 
         mapFragment.getMapAsync(new MapListener());
 
@@ -145,13 +156,19 @@ public class DetailActivity extends AppCompatActivity {
                         if (poiList.size() != 0) {
                             showCachedLocations(poiList);
                             Log.d("Location caching ", "works");
+                            _loadingIndicator.setVisibility(View.INVISIBLE);
+                            preloaderBackground.setVisibility(View.INVISIBLE);
                         }
                         else {
                             new GooglePlaces(loc, reminder, new Callback(loc), getApplicationContext()).execute();
+                            _loadingIndicator.setVisibility(View.INVISIBLE);
+                            preloaderBackground.setVisibility(View.INVISIBLE);
                         }
                     }
                     else {
                         new GooglePlaces(loc, reminder, new Callback(loc), getApplicationContext()).execute();
+                        _loadingIndicator.setVisibility(View.INVISIBLE);
+                        preloaderBackground.setVisibility(View.INVISIBLE);
                     }
 
                 }
@@ -363,6 +380,8 @@ public class DetailActivity extends AppCompatActivity {
             // and show them in the xml
             GooglePlacesListViewAdapter myAdapter = new GooglePlacesListViewAdapter(DetailActivity.this, R.layout.googleplace_list_item_view, venuesList);
             poiListView.setAdapter(myAdapter);
+
+
         }
     }
 
