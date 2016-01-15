@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.admuc.locationreminders.R;
 import com.admuc.locationreminders.activities.DetailActivity;
@@ -23,7 +20,7 @@ import java.util.List;
 /**
  * Created by matt on 31/10/15.
  */
-public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHolder> {
+public class ReminderAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private Context context;
     private List<Reminder> reminders;
@@ -31,40 +28,6 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ViewHo
     public ReminderAdapter(List<Reminder> reminders, Context context) {
         this.context = context;
         this.reminders = reminders;
-    }
-
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-
-        public long id;
-        public String typeName;
-
-        public TextView title;
-        public TextView locationString;
-
-        public ImageView type;
-        public ImageView locationIcon;
-        public ImyViewHolderClicks clickListener;
-        public ImageView circleIcon;
-
-        public ViewHolder(View itemView, ImyViewHolderClicks clickListener) {
-            super(itemView);
-            this.clickListener = clickListener;
-            this.title = (TextView) itemView.findViewById(R.id.title);
-            this.locationString = (TextView) itemView.findViewById(R.id.locationString);
-            this.type = (ImageView) itemView.findViewById(R.id.type);
-            this.locationIcon = (ImageView) itemView.findViewById(R.id.locationIcon);
-            this.circleIcon = (ImageView) itemView.findViewById(R.id.circle);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            clickListener.onReminder(this.id, this.typeName);
-        }
-
-        public interface ImyViewHolderClicks {
-            void onReminder(long id, String type);
-        }
     }
 
     @Override
