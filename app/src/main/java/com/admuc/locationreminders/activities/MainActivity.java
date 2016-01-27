@@ -1,12 +1,16 @@
 package com.admuc.locationreminders.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +32,11 @@ import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
 import com.admuc.locationreminders.services.LocationService;
 
+import java.util.jar.Manifest;
+
 public class MainActivity extends AppCompatActivity {
+
+    private static final int PERMISSIONS_REQUEST_ACCESS_LOCATION = 1;
 
     private LocationReminders application;
 
@@ -61,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout = (TabLayout) findViewById(R.id.tablayout);
         tabLayout.setupWithViewPager(viewPager);
+
+        checkPermissions();
 
         if (preferences.getBoolean("pref_first_start", true)) {
             startLocationService();
@@ -201,4 +211,12 @@ public class MainActivity extends AppCompatActivity {
             completedRemindersFragment.notifyDataSetChanged();
     }
 
+
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_LOCATION);
+        }
+    }
 }
