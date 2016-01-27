@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Fragment;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -320,6 +321,9 @@ public class DetailActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_remove) {
             LocationReminders application = (LocationReminders) getApplication();
+
+            NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.cancel((int)_id);
 
             if (type.equals("MANUAL")) {
                 ManualReminder mReminder = ManualReminder.findById(ManualReminder.class, _id);

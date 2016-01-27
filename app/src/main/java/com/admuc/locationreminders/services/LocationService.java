@@ -62,7 +62,7 @@ public class LocationService extends Service implements LocationListener {
             return;
         }
 
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, radius, this);
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0 /*radius*/, this);
     }
 
     @Override
