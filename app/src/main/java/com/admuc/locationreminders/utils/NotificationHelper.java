@@ -43,8 +43,8 @@ public class NotificationHelper {
             notificationIntent.putExtra("REMINDER_TYPE", "MANUAL");
         }
 
-        //notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-                //| Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
         PendingIntent intent = PendingIntent.getActivity(context, (int) System.currentTimeMillis(),
                 notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);

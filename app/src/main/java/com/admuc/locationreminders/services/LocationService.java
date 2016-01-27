@@ -62,7 +62,11 @@ public class LocationService extends Service implements LocationListener {
             return;
         }
 
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0 /*radius*/, this);
+        if (preferences.getBoolean("pref_accuracy", false)) {
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0 /*radius*/, this);
+        } else {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0 /*radius*/, this);
+        }
     }
 
     @Override
