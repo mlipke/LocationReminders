@@ -21,8 +21,6 @@ public class PlacesAPIRequestBuilder {
         private double radius;
         private String key;
 
-        private String parameters;
-
         public BuilderInstance() {
 
         }
