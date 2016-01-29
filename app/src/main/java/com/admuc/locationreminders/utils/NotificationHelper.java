@@ -33,14 +33,17 @@ public class NotificationHelper {
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent notificationIntent = new Intent(context, DetailActivity.class);
+        String reminderType;
 
         if (reminder instanceof AutomaticReminder) {
+            reminderType = "AUTOMATIC";
             notificationIntent.putExtra("REMINDER_ID", reminder.getId());
-            notificationIntent.putExtra("REMINDER_TYPE", "AUTOMATIC");
+            notificationIntent.putExtra("REMINDER_TYPE", reminderType);
         }
         else {
+            reminderType = "MANUAL";
             notificationIntent.putExtra("REMINDER_ID", reminder.getId());
-            notificationIntent.putExtra("REMINDER_TYPE", "MANUAL");
+            notificationIntent.putExtra("REMINDER_TYPE", reminderType);
         }
 
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
@@ -52,17 +55,14 @@ public class NotificationHelper {
         Intent completedIntent = new Intent(context, CompletedListener.class);
         completedIntent.setAction("de.admuc.Completed");
         completedIntent.putExtra("REMINDER_ID", reminder.getId());
-        if (reminder instanceof ManualReminder)
-            completedIntent.putExtra("REMINDER_TYPE", "MANUAL");
-        else {
-            completedIntent.putExtra("REMINDER_TYPE", "AUTOMATIC");
-        }
+        completedIntent.putExtra("REMINDER_TYPE", reminderType);
+
         PendingIntent completedPendingIntent = PendingIntent.getBroadcast(context, (int) System.currentTimeMillis(), completedIntent, Intent.FILL_IN_DATA);
 
         builder.addAction(R.drawable.ic_done_24dp, "Completed", completedPendingIntent);
 
         builder.setContentIntent(intent);
-        manager.notify((int) (long) reminder.getId(), builder.build());
+        manager.notify(reminderType, (int) (long) reminder.getId(), builder.build());
         Log.d("NotificationCast", Integer.toHexString((int)(long)reminder.getId()));
     }
 
@@ -74,7 +74,7 @@ public class NotificationHelper {
             String type = intent.getStringExtra("REMINDER_TYPE");
 
             NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.cancel((int)id);
+            manager.cancel(type, (int)id);
 
             if (type != null) {
                 if (type.equals("MANUAL")) {

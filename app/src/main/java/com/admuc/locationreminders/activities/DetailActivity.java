@@ -323,7 +323,7 @@ public class DetailActivity extends AppCompatActivity {
             LocationReminders application = (LocationReminders) getApplication();
 
             NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.cancel((int)_id);
+            manager.cancel(type, (int)_id);
 
             if (type.equals("MANUAL")) {
                 ManualReminder mReminder = ManualReminder.findById(ManualReminder.class, _id);

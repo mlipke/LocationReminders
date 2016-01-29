@@ -51,7 +51,10 @@ public class GooglePlacesListViewAdapter extends ArrayAdapter<GooglePlace> {
         } else
             holder = (ViewHolder) convertView.getTag();
 
-        holder.txtDesc.setText(MapHelper.convertKmToMeter(googlePlace.getDistance()) + " m | " + googlePlace.getOpenNow());
+        if (googlePlace.getOpenNow() == "")
+            holder.txtDesc.setText(MapHelper.convertKmToMeter(googlePlace.getDistance()) + " m");
+        else
+            holder.txtDesc.setText(MapHelper.convertKmToMeter(googlePlace.getDistance()) + " m | " + googlePlace.getOpenNow());
         holder.txtTitle.setText(googlePlace.getName());
         holder.imageView.setImageResource(R.drawable.ic_location_on_24dp);  // TODO: location type icon from URL
 
