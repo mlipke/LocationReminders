@@ -1,39 +1,26 @@
 package com.admuc.locationreminders.services;
 
-import android.app.Activity;
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.admuc.locationreminders.BuildConfig;
-import com.admuc.locationreminders.R;
-import com.admuc.locationreminders.activities.DetailActivity;
 import com.admuc.locationreminders.models.AutomaticReminder;
-import com.admuc.locationreminders.models.GooglePlace;
 import com.admuc.locationreminders.models.Location;
 import com.admuc.locationreminders.models.Reminder;
-import com.admuc.locationreminders.utils.MapHelper;
-import com.admuc.locationreminders.utils.NotificationHelper;
 import com.admuc.locationreminders.utils.PlacesAPIRequestBuilder;
-import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.ByteArrayBuffer;
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by 4gray on 26.11.15.

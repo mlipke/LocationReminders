@@ -1,6 +1,5 @@
 package com.admuc.locationreminders.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,12 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.admuc.locationreminders.LocationReminders;
 import com.admuc.locationreminders.R;
@@ -27,12 +23,9 @@ import com.admuc.locationreminders.adapters.ViewPagerAdapter;
 import com.admuc.locationreminders.fragments.ActiveRemindersFragment;
 import com.admuc.locationreminders.fragments.CompletedRemindersFragment;
 import com.admuc.locationreminders.models.AutomaticReminder;
-import com.admuc.locationreminders.models.Location;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
 import com.admuc.locationreminders.services.LocationService;
-
-import java.util.jar.Manifest;
 
 public class MainActivity extends AppCompatActivity {
 

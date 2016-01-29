@@ -26,7 +26,6 @@ import com.admuc.locationreminders.utils.MapHelper;
 import com.admuc.locationreminders.utils.NotificationHelper;
 import com.admuc.locationreminders.utils.ReminderHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -132,7 +131,7 @@ public class LocationService extends Service implements LocationListener {
                 break;
         }
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override
