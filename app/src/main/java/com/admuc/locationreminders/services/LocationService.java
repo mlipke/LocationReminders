@@ -41,6 +41,8 @@ public class LocationService extends Service implements LocationListener {
     private SharedPreferences preferences;
     private int radius;
 
+    private LocationManager locationManager;
+
     public LocationService() {}
 
     @Override
@@ -48,7 +50,7 @@ public class LocationService extends Service implements LocationListener {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         radius = Integer.parseInt(preferences.getString("pref_radius", "200"));
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             Log.d("Location", "Forbidden");
             return;
@@ -82,7 +84,21 @@ public class LocationService extends Service implements LocationListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("Service", "Started!");
         return START_NOT_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        try {
+            locationManager.removeUpdates(this);
+            locationManager = null;
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+
+        Log.d("Service", "Stopped!");
     }
 
     @Override
