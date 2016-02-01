@@ -1,6 +1,5 @@
 package com.admuc.locationreminders.activities;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,12 +13,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import com.admuc.locationreminders.LocationReminders;
 import com.admuc.locationreminders.R;
@@ -27,12 +23,14 @@ import com.admuc.locationreminders.adapters.ViewPagerAdapter;
 import com.admuc.locationreminders.fragments.ActiveRemindersFragment;
 import com.admuc.locationreminders.fragments.CompletedRemindersFragment;
 import com.admuc.locationreminders.models.AutomaticReminder;
-import com.admuc.locationreminders.models.Location;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
 import com.admuc.locationreminders.services.LocationService;
 
-import java.util.jar.Manifest;
+/**
+ * MainActivity contains TabLayout with RecyclerViews and displays
+ * two different types of reminders - active and completed
+ */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -135,6 +133,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Activate or deactivate manual service control
+     * @param item - toolbar button
+     */
     private void toggleLocationService(MenuItem item) {
         Intent intent = new Intent(this, LocationService.class);
         if (preferences.getBoolean("pref_service_running", false)) {
@@ -159,6 +161,9 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
     }
 
+    /**
+     * Create snackbar with undo button to restore removed reminder
+     */
     private void showUndoSnackBar() {
         final Reminder deletedReminder = application.getReminder();
 
@@ -189,7 +194,9 @@ public class MainActivity extends AppCompatActivity {
             completedRemindersFragment.notifyDataSetChanged();
     }
 
-
+    /**
+     * Check permissions for Android 6
+     */
     private void checkPermissions() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {

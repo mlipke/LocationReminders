@@ -30,6 +30,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Background service is used for managing API requests to Google Places API
+ * to check for locations near user position and send notification
+ */
+
 public class LocationService extends Service implements LocationListener {
 
     private static final int FREQ_LOW = 1000 * 60 * 5; // five minutes

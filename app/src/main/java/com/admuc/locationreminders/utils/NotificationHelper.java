@@ -17,6 +17,8 @@ import com.admuc.locationreminders.models.Reminder;
 
 /**
  * Created by matt on 27/11/15.
+ *
+ * Notification helper is responsible for notification creating and management
  */
 public class NotificationHelper {
 

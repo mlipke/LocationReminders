@@ -25,6 +25,10 @@ import com.admuc.locationreminders.models.Location;
 import com.admuc.locationreminders.models.ManualReminder;
 import com.admuc.locationreminders.models.Reminder;
 
+/**
+ * ManageActivity contains form for reminder CRUD-operations
+ */
+
 public class ManageActivity extends AppCompatActivity {
 
     private String [] arraySpinner = null;

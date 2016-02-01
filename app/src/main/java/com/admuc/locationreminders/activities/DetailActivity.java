@@ -143,12 +143,11 @@ public class DetailActivity extends AppCompatActivity {
                     getAndShowPois(location);
                 }
 
-                // distance between first location, which was detected on activity start and actual location (for live/dynamic map)
+                // distance between first location, which was detected on activity start
+                // and actual location (for live/dynamic map)
                 locationDistance = MapHelper.CalculationByDistance(
                         MapHelper.convertLocation(_startLocation),
                         MapHelper.convertLocation(location));
-                //Log.d("Location distance: ", String.valueOf(locationDistance));
-                //Log.d("Location radius: ", String.valueOf(_radius/1000.0/2.0));
 
                 if (locationDistance > (_radius/1000.0/2.0)) {
                     Log.d("Map update ", "");
@@ -165,6 +164,10 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Request Google Places API for POIs near my location
+     * @param location - current user location
+     */
     public void getAndShowPois(android.location.Location location) {
 
         double lat = location.getLatitude();
@@ -198,6 +201,12 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Check for relevant POIs in cache
+     * @param location - current user location
+     * @param reminder - selected reminder
+     * @return
+     */
     private List<GooglePlace> checkForNearLocationsInCache(Location location, Reminder reminder) {
         List<GooglePlace> places = new ArrayList<>();
         Location dbLocation;
@@ -205,30 +214,32 @@ public class DetailActivity extends AppCompatActivity {
         String reminderType;
         double distance;
 
-        // get saved locations near my location
-        // iterate over saved locations and check distance
-        // if distance < 0.2 save it to list
-        // if list is empty -> request google places api
-        //Iterator<GooglePlace> googlePlaceIterator = GooglePlace.findAll(GooglePlace.class);
-        //while (googlePlaceIterator.hasNext()) {
+        /**
+         * get all saved locations near my location
+         * iterate over saved locations and check distance
+         * if distance < 0.2 save it to list
+         * if list is empty -> request google places api
+        */
+
         List<GooglePlace> googlePlacesList = GooglePlace.listAll(GooglePlace.class);
         for (int i = 0; i < googlePlacesList.size(); i++) {
             dbLocation = googlePlacesList.get(i).getLocation();
             type = googlePlacesList.get(i).getType();
-            Log.d("Caching: ", "try to get pois from cache");
+            Log.d("Caching: ", "Trying to get pois from cache");
 
             // check type of location - for automatic reminders
             List<String> poiTypes = Arrays.asList(type.split("\\s*,\\s*"));
             if (poiTypes.size() != 0) {
-                //Log.d("type check: ", googlePlacesList.get(i).getType());
+
                 for (int x = 0; x < poiTypes.size(); x++) {
 
                     reminderType = ((AutomaticReminder)reminder).getPoi();
+                    // check for POI type match
                     if (poiTypes.get(x).equals(reminderType)) {
 
                         distance = MapHelper.CalculationByDistance(dbLocation, location);
+                        // check for distance match
                         if (distance <= (_radius/1000.0)) {
-                            //Log.d("match!", googlePlacesList.get(i).getName());
                             googlePlacesList.get(i).setDistance(distance);
                             googlePlacesList.get(i).setOpenNow("");
                             places.add(googlePlacesList.get(i));
@@ -249,6 +260,11 @@ public class DetailActivity extends AppCompatActivity {
         return places;
     }
 
+    /**
+     * Show only defined number of POIs
+     * @param places - List with all relevant POIs
+     * @return list with limited number of POIs
+     */
     private List<GooglePlace> limitList(List places) {
         if (_poiLimit > places.size()) {
             return places;
@@ -257,6 +273,10 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Show POIs from the cache on the map and in the list
+     * @param cachedLocations
+     */
     private void showCachedLocations(List<GooglePlace> cachedLocations) {
         for (int i = 0; i < cachedLocations.size(); i++) {
             LatLng position = MapHelper.convertLatLng(cachedLocations.get(i).getLocation());
@@ -300,7 +320,7 @@ public class DetailActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_edit) {
+        if (id == R.id.action_edit) { // Edit reminder
 
             Intent intent = new Intent(getApplicationContext(), ManageActivity.class);
             intent.putExtra("REMINDER_ID", _id);
@@ -308,7 +328,7 @@ public class DetailActivity extends AppCompatActivity {
             startActivity(intent);
 
             return true;
-        } else if (id == R.id.action_remove) {
+        } else if (id == R.id.action_remove) { // Remove reminder
             LocationReminders application = (LocationReminders) getApplication();
 
             NotificationManager manager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -329,7 +349,7 @@ public class DetailActivity extends AppCompatActivity {
             finish();
 
             return true;
-        } else if (id == R.id.action_complete) {
+        } else if (id == R.id.action_complete) { // Mark reminder as complete
             reminder.setCompleted(true);
 
             if (type.equals("MANUAL")) {

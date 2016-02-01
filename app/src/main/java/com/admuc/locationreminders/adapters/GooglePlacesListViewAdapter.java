@@ -17,6 +17,8 @@ import java.util.List;
 
 /**
  * Created by 4gray on 22.01.16.
+ *
+ * ListView Adapter for POI items in the Detail Activity
  */
 public class GooglePlacesListViewAdapter extends ArrayAdapter<GooglePlace> {
 
@@ -51,12 +53,14 @@ public class GooglePlacesListViewAdapter extends ArrayAdapter<GooglePlace> {
         } else
             holder = (ViewHolder) convertView.getTag();
 
+        // Cached POIs doesn't have information about opening hours
         if (googlePlace.getOpenNow() == "")
             holder.txtDesc.setText(MapHelper.convertKmToMeter(googlePlace.getDistance()) + " m");
         else
             holder.txtDesc.setText(MapHelper.convertKmToMeter(googlePlace.getDistance()) + " m | " + googlePlace.getOpenNow());
+
         holder.txtTitle.setText(googlePlace.getName());
-        holder.imageView.setImageResource(R.drawable.ic_location_on_24dp);  // TODO: location type icon from URL
+        holder.imageView.setImageResource(R.drawable.ic_location_on_24dp);
 
         return convertView;
     }

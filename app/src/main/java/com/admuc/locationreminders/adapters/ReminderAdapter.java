@@ -19,6 +19,8 @@ import java.util.List;
 
 /**
  * Created by matt on 31/10/15.
+ *
+ * Adapter for RecyclerView in MainActivity
  */
 public class ReminderAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -49,7 +51,8 @@ public class ReminderAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Reminder reminder = reminders.get(position);
-        
+
+        // Distinguish between two different reminder types and set content
         if (reminder instanceof ManualReminder) {
             holder.typeName = "MANUAL";
             holder.id = reminder.getId();
