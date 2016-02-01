@@ -39,6 +39,12 @@ public class ManageActivity extends AppCompatActivity {
     private Location selectedLocation;
     private String selectedLocationDescription;
 
+    private Button setLocation;
+    private AutoCompleteTextView poiTextView;
+    private TextView poiLabel;
+    private TextView selectedLocationText;
+    private TextInputLayout poiLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +55,12 @@ public class ManageActivity extends AppCompatActivity {
         // get fields and values
         final EditText title = (EditText) findViewById(R.id.title);
         final EditText note = (EditText) findViewById(R.id.note);
-        final AutoCompleteTextView poiTextView = (AutoCompleteTextView)
-                findViewById(R.id.poiTextView);
+        poiTextView = (AutoCompleteTextView) findViewById(R.id.poiTextView);
+
+        setLocation = (Button) findViewById(R.id.setLocation);
+        poiLabel = (TextView) findViewById(R.id.poiLabel);
+        selectedLocationText = (TextView) findViewById(R.id.selectedLocationText);
+        poiLayout = (TextInputLayout) findViewById(R.id.poiLayout);
 
 
         // get type and reminder id from intent;
@@ -66,9 +76,21 @@ public class ManageActivity extends AppCompatActivity {
 
             if (type.equals("MANUAL")) {
                 reminder = ManualReminder.findById(ManualReminder.class, id);
+                manualRadioBtn.setChecked(true);
+                setLocation.setVisibility(View.VISIBLE);
+                poiTextView.setVisibility(View.INVISIBLE);
+                poiLayout.setVisibility(View.INVISIBLE);
+                selectedLocationText.setVisibility(View.VISIBLE);
+                poiLabel.setText("Set position");
             } else if (type.equals("AUTOMATIC")) {
                 reminder = AutomaticReminder.findById(AutomaticReminder.class, id);
                 poiTextView.setText(reminder.getLocationDescription());
+                automaticRadioBtn.setChecked(true);
+                setLocation.setVisibility(View.INVISIBLE);
+                selectedLocationText.setVisibility(View.INVISIBLE);
+                poiTextView.setVisibility(View.VISIBLE);
+                poiLayout.setVisibility(View.VISIBLE);
+                poiLabel.setText("Select type of POI");
             }
 
 
@@ -188,12 +210,6 @@ public class ManageActivity extends AppCompatActivity {
 
     public void changeLocationDetection(View view) {
         locationRadioValue = ((RadioButton)findViewById(locationRadioGroup.getCheckedRadioButtonId())).getText().toString();
-
-        Button setLocation = (Button) findViewById(R.id.setLocation);
-        AutoCompleteTextView poiTextView = (AutoCompleteTextView) findViewById(R.id.poiTextView);
-        TextView poiLabel = (TextView) findViewById(R.id.poiLabel);
-        TextView selectedLocationText = (TextView) findViewById(R.id.selectedLocationText);
-        TextInputLayout poiLayout = (TextInputLayout) findViewById(R.id.poiLayout);
 
         if(locationRadioValue.equals("manual")) {
             //hide location radio group and shop button for manual position selection
