@@ -6,6 +6,6 @@ Created for the course Application development for mobile and ubiquitous
 computing at TU Dresden.
 
 
-## Screenshot
+## Screenshots
 
 <img src="https://github.com/thiks/LocationReminders/blob/master/screenshots/main_active.png?raw=true" width="250"> <img src="https://github.com/thiks/LocationReminders/blob/master/screenshots/detail_view.png?raw=true" width="250"> <img src="https://github.com/thiks/LocationReminders/blob/master/screenshots/manage_view.png?raw=true" width="250">
